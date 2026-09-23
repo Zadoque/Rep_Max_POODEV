@@ -91,4 +91,467 @@ React Router no modo Data -> Não faz mágica sozinho, mas traz ferramentas para
 fetch() -> Para fazer requisição à API RESTful.
 
 Esse conjunto permite que tenhamos um equilíbrio entre conceitos a aprender e aplicar e prazo de entrega. 
+
+\subsection{Bloco: Treino Individual}
+
+Concentra as funcionalidades de uso autônomo do aluno: cadastro de exercícios, registro de séries (incluindo as técnicas de intensidade), cálculo de 1RM, histórico e rotinas.
+
+\subsection{Bloco: Acompanhamento por Personal Trainer}
+
+Reúne as funcionalidades da segunda versão do sistema: vínculo entre aluno e personal, montagem de planos de treino pelo profissional, feedback do aluno e comunicação entre as partes.
+
+\section{Estudo de Viabilidade}
+
+\subsection{Viabilidade Técnica}
+
+O sistema é tecnicamente viável em razão do uso de tecnologias consolidadas e amplamente adotadas no mercado de desenvolvimento de software:
+
+\begin{itemize}
+    \item Java, como linguagem de programação orientada a objetos;
+    \item Spring Boot, para a criação simplificada da API;
+    \item Spring Web, para a exposição dos endpoints HTTP;
+    \item Spring Security, para segurança (JWT, Argon2);
+    \item Spring Data JPA e Hibernate, para a camada de persistência de dados (ORM);
+    \item PostgreSQL, como sistema gerenciador de banco de dados relacional;
+    \item Maven, para o gerenciamento de dependências do projeto;
+    \item Docker e Docker Compose, para padronizar o ambiente de execução.
+\end{itemize}
+
+A adoção da arquitetura em camadas (Controller, Service, Repository, Entity/DTO), detalhada na Seção 11, facilita a manutenção, os testes e a evolução futura do sistema, especialmente relevante dado o caráter incremental do projeto: a intenção declarada é iniciar com um escopo simples e evoluir gradualmente até um sistema completo.
+
+\subsection{Viabilidade Operacional}
+
+Do ponto de vista operacional, o sistema RepMax pode auxiliar diretamente os seguintes perfis de usuário:
+
+\begin{itemize}
+    \item \textbf{Alunos}, que passam a ter um histórico estruturado de treino e indicadores de progressão;
+    \item \textbf{Personal trainers}, que passam a montar e acompanhar treinos de seus alunos diretamente pela plataforma;
+    \item \textbf{Administradores}, responsáveis pela gestão geral de usuários e exercícios cadastrados no sistema.
+\end{itemize}
+
+\subsection{Viabilidade Econômica e Orçamento}
+
+Por se tratar de um projeto acadêmico desenvolvido por dois alunos, não há custos reais de mão de obra envolvidos. Apresenta-se a seguir uma estimativa ilustrativa de custo baseada no tempo de desenvolvimento.
+
+\begin{longtable}{L{4.5cm} L{6cm} L{3.5cm}}
+\toprule
+\textbf{Item} & \textbf{Descrição} & \textbf{Valor} \\
+\midrule
+\endfirsthead
+Hora técnica & Valor médio de referência para desenvolvedor júnior/estudante & R\$ 75,00 \\
+Horas diárias & 2 a 3 horas em dias úteis (média de 2,5h), por desenvolvedor & --- \\
+Semanas estimadas & 12 semanas & --- \\
+Total de horas & 2,5h × 5 dias × 12 semanas × 2 desenvolvedores & \(\approx\) 300 horas \\
+Custo total estimado & 300 horas × R\$ 75,00 & \(\approx\) R\$ 22.500,00 \\
+\bottomrule
+\end{longtable}
+
+Não há custos com licenças de software (Java, Spring Boot, PostgreSQL e Docker são gratuitos e de código aberto), banco de dados ou hospedagem, uma vez que o desenvolvimento e os testes ocorrem em ambiente local/containerizado.
+
+\subsection{Análise de Riscos}
+
+\begin{longtable}{L{4cm} L{1.6cm} L{1.8cm} L{6.5cm}}
+\toprule
+\textbf{Risco} & \textbf{Impacto} & \textbf{Prob.} & \textbf{Estratégia de mitigação} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Risco} & \textbf{Impacto} & \textbf{Prob.} & \textbf{Estratégia de mitigação} \\
+\midrule
+\endhead
+Registro incorreto de séries combinadas (bi-set/tri-set/monster set) & Alto & Média & Validar na camada de Service a quantidade mínima de exercícios exigida por tipo de técnica. \\
+Cálculo impreciso da carga máxima estimada & Médio & Baixa & Cobrir a fórmula de 1RM com testes unitários e restringir seu uso a faixas de repetição confiáveis (até 10-12 reps). \\
+Falhas no vínculo aluno-personal & Alto & Média & Exigir aceite mútuo e validar unicidade do vínculo ativo antes de novas solicitações. \\
+Exposição indevida de dados entre alunos & Alto & Média & Utilizar DTOs e controle de acesso por perfil (RBAC), garantindo que um usuário só acesse seus próprios dados ou os de alunos vinculados. \\
+Sobrecarga na comunicação em tempo real (chat) & Médio & Média & Implementar o chat via WebSocket com filas e reconexão, validando antes com uma versão simplificada (polling). \\
+Atraso no cronograma devido à carga horária limitada & Médio & Alta & Adotar metodologia ágil com priorização das funcionalidades essenciais (Fase 1) antes das avançadas (Fases 2 e 3). \\
+Dificuldade de aprendizado de tecnologias novas (WebSocket, Docker) & Médio & Alta & Reservar tempo para estudo dirigido e priorizar documentação oficial das tecnologias. \\
+\bottomrule
+\end{longtable}
+
+\section{Requisitos do Sistema}
+
+\subsection{Requisitos Funcionais --- Versão 1 (Individual)}
+
+\begin{longtable}{L{1.4cm} L{9.8cm} L{1.6cm} L{1.8cm}}
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
+\midrule
+\endhead
+RF01 & Permitir o cadastro de um novo usuário. & Alta & Não implementado \\
+RF02 & Permitir que o usuário realize login por e-mail e senha. & Alta & Não implementado \\
+RF03 & Permitir o CRUD de exercícios (nome, grupo muscular, descrição). & Alta & Não implementado \\
+RF04 & Permitir o registro de uma sessão de treino, com data, exercícios, séries, repetições e carga. & Alta & Não implementado \\
+RF05 & Permitir a consulta do histórico de treinos do usuário. & Alta & Não implementado \\
+RF06 & Calcular automaticamente a repetição máxima estimada (1RM), a partir de carga e repetições, usando a fórmula de referência de Epley. & Média & Não implementado \\
+RF07 & Exibir a evolução de carga e volume de um exercício ao longo do tempo. & Média & Não implementado \\
+RF08 & Permitir a criação de rotinas de treino reutilizáveis (ex.: Treino A, B, C). & Média & Não implementado \\
+RF09 & Permitir o registro de séries em \textbf{bi-set} (dois exercícios em sequência, sem descanso). & Média & Não implementado \\
+RF10 & Permitir o registro de séries em \textbf{tri-set} (três exercícios em sequência, sem descanso). & Média & Não implementado \\
+RF11 & Permitir o registro de séries em \textbf{monster set} (quatro ou mais exercícios em sequência, sem descanso). & Média & Não implementado \\
+RF12 & Permitir o registro de séries em \textbf{drop set} (redução progressiva de carga no mesmo exercício, sem descanso). & Média & Não implementado \\
+RF13 & Exibir, para cada exercício, uma demonstração de execução correta (texto, imagem ou vídeo). & Alta & Não implementado \\
+RF14 & Permitir a edição e exclusão de treinos e exercícios cadastrados. & Alta & Não implementado \\
+RF15 & Permitir a filtragem do histórico por período, exercício ou grupo muscular. & Média & Não implementado \\
+\bottomrule
+\end{longtable}
+
+\subsection{Requisitos Não Funcionais --- Versão 1}
+
+\begin{longtable}{L{1.6cm} L{10.4cm} L{1.9cm}}
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
+\midrule
+\endhead
+RNF01 & API RESTful, seguindo boas práticas de verbos e códigos de status HTTP. & Não implementado \\
+RNF02 & Persistência dos dados em PostgreSQL via Spring Data JPA. & Não implementado \\
+RNF03 & Arquitetura organizada em camadas (Controller, Service, Repository, Entity/DTO). & Não implementado \\
+RNF04 & Uso de DTOs para desacoplar entidades de persistência das requisições/respostas. & Não implementado \\
+RNF05 & Documentação de API via OpenAPI/Swagger. & Não implementado \\
+RNF06 & Senhas armazenadas de forma criptografada (Argon2). & Não implementado \\
+RNF07 & Tratamento centralizado de exceções, com respostas de erro padronizadas. & Não implementado \\
+RNF08 & Tempo de resposta inferior a 1s nas operações comuns de consulta e registro. & Não implementado \\
+RNF09 & Sistema executável em contêineres Docker, com configuração via Docker Compose. & Não implementado \\
+RNF10 & Código-fonte versionado em Git, com commits organizados por funcionalidade. & Não implementado \\
+RNF11 & Testes unitários e de integração para as regras de negócio críticas (cálculo de 1RM, técnicas combinadas). & Não implementado \\
+RNF12 & Validar dados obrigatórios antes da persistência (carga não negativa, repetições mínimas etc.). & Não implementado \\
+\bottomrule
+\end{longtable}
+
+\subsection{Requisitos Funcionais --- Versão 2 (Personal Trainer)}
+
+\begin{longtable}{L{1.6cm} L{9.6cm} L{1.6cm} L{1.7cm}}
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
+\midrule
+\endhead
+RFP01 & Permitir o cadastro de um usuário com perfil de personal trainer, distinto do perfil de aluno. & Alta & Não implementado \\
+RFP02 & Permitir a vinculação entre personal trainer e aluno, mediante solicitação e aceite mútuo. & Alta & Não implementado \\
+RFP03 & Permitir que o personal monte planos de treino personalizados para o aluno, com exercícios, séries, cargas e técnicas de intensidade. & Alta & Não implementado \\
+RFP04 & Permitir que o aluno visualize o treino montado pelo personal. & Alta & Não implementado \\
+RFP05 & Permitir que o aluno registre feedback após a execução do treino (esforço, dor, observações). & Alta & Não implementado \\
+RFP06 & Permitir a troca de mensagens (chat) entre personal e aluno vinculados. & Alta & Não implementado \\
+RFP07 & Notificar o personal quando o aluno registrar feedback ou concluir um treino. & Média & Não implementado \\
+RFP08 & Permitir que o personal acompanhe a evolução de cada aluno vinculado. & Média & Não implementado \\
+RFP09 & Permitir que o personal edite um plano de treino já existente. & Média & Não implementado \\
+RFP10 & Permitir que um personal gerencie múltiplos alunos simultaneamente. & Média & Não implementado \\
+RFP11 & Permitir que o aluno desvincule-se de um personal a qualquer momento. & Baixa & Não implementado \\
+\bottomrule
+\end{longtable}
+
+\subsection{Requisitos Não Funcionais --- Versão 2}
+
+\begin{longtable}{L{1.8cm} L{10cm} L{1.9cm}}
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
+\midrule
+\endhead
+RNFP01 & Comunicação em tempo real via WebSocket para o chat entre personal e aluno. & Não implementado \\
+RNFP02 & Controle de acesso baseado em papéis (RBAC): aluno, personal, administrador. & Não implementado \\
+RNFP03 & Suporte a múltiplos alunos vinculados a um mesmo personal sem degradação de desempenho perceptível. & Não implementado \\
+RNFP04 & Histórico de mensagens persistido e recuperável. & Não implementado \\
+RNFP05 & Notificações (push ou e-mail) para eventos relevantes (novo treino, feedback recebido). & Não implementado \\
+RNFP06 & Tratamento de dados pessoais em conformidade com a LGPD, com acesso restrito por vínculo aluno-personal. & Não implementado \\
+\bottomrule
+\end{longtable}
+
+\section{Atores do Sistema}
+
+\subsection{Aluno}
+Usuário final que utiliza o sistema para registrar seus próprios treinos. Pode: cadastrar exercícios e treinos, registrar séries, consultar seu histórico e progressão, criar rotinas, vincular-se a um personal trainer, visualizar planos de treino recebidos e enviar feedback.
+
+\subsection{Personal Trainer}
+Profissional vinculado a um ou mais alunos. Pode: aceitar vínculos de alunos, montar e editar planos de treino personalizados, visualizar o histórico e a evolução de cada aluno vinculado, receber feedbacks e se comunicar com os alunos via chat.
+
+\subsection{Administrador}
+Responsável pela gestão geral do sistema. Pode: gerenciar usuários, gerenciar o catálogo de exercícios e instruções de execução, e controlar permissões de acesso.
+
+\section{Diagramas de Fluxo de Dados --- DFD}
+
+\subsection{DFD de Contexto}
+O sistema RepMax é representado como um processo único, interagindo com três atores externos (Aluno, Personal Trainer e Administrador) e com o banco de dados PostgreSQL. Os principais fluxos são: dados de cadastro e treino (Aluno \(\rightarrow\) Sistema), planos de treino montados (Personal \(\rightarrow\) Sistema \(\rightarrow\) Aluno), feedback e mensagens (Aluno \(\leftrightarrow\) Sistema \(\leftrightarrow\) Personal), operações de leitura/gravação junto ao banco de dados, e respostas da API para todos os atores.
+
+\subsection{DFD de Registro de Treino}
+\begin{enumerate}[label=\arabic*.]
+    \item O aluno envia os dados do treino (exercícios, séries, repetições, carga, tipo de técnica).
+    \item A API recebe e valida as informações.
+    \item A camada Service aplica as regras de negócio (ex.: validar quantidade mínima de exercícios em um monster set).
+    \item A camada Repository persiste os dados.
+    \item O banco de dados PostgreSQL confirma a operação.
+    \item A API retorna o treino registrado (TreinoResponseDTO), incluindo o 1RM estimado calculado.
+\end{enumerate}
+
+\subsection{DFD de Vínculo e Comunicação Personal-Aluno}
+\begin{enumerate}[label=\arabic*.]
+    \item O aluno solicita vínculo com um personal trainer.
+    \item O personal recebe e aceita (ou recusa) a solicitação.
+    \item O personal monta um plano de treino para o aluno vinculado.
+    \item O sistema notifica o aluno sobre o novo plano.
+    \item O aluno executa o treino e registra feedback.
+    \item O sistema notifica o personal sobre o feedback recebido.
+    \item Personal e aluno trocam mensagens via chat, persistidas no histórico de conversas.
+\end{enumerate}
+
+\section{Metodologia de Desenvolvimento}
+
+\subsection{Metodologia Ágil}
+O desenvolvimento seguirá princípios ágeis, adaptados à realidade de um projeto acadêmico com carga horária diária limitada: desenvolvimento iterativo e incremental, entregas parciais contínuas, e priorização das funcionalidades essenciais antes das complementares --- refletindo diretamente o caráter evolutivo do projeto (do simples ao completo).
+
+\subsection{Cronograma Estimado em Sprints}
+
+\begin{longtable}{L{2cm} L{2.5cm} L{9cm}}
+\toprule
+\textbf{Sprint} & \textbf{Semana} & \textbf{Foco principal} \\
+\midrule
+\endfirsthead
+Sprint 1 & Semana 1--2 & Levantamento de requisitos, modelagem UML e modelo ER inicial. \\
+Sprint 2 & Semana 3--4 & Configuração do projeto Spring Boot, entidades JPA e estrutura em camadas. \\
+Sprint 3 & Semana 5--6 & CRUD de usuários, exercícios e registro básico de treinos. \\
+Sprint 4 & Semana 7--8 & Cálculo de 1RM, histórico de progressão e rotinas. \\
+Sprint 5 & Semana 9--10 & Técnicas de intensidade (bi-set, tri-set, monster set, drop set) e instruções de execução. \\
+Sprint 6 & Semana 11--12 & Versão 2: vínculo aluno-personal, montagem de planos, feedback e chat. \\
+\bottomrule
+\end{longtable}
+
+\section{Modelagem UML --- Diagrama de Classes}
+
+\subsection{Classe Usuario}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{UMLs/UML_USUARIO.png}
+    \caption{UML usuário}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\subsection{Classe Perfil}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{UMLs/UML_PERFIL.png}
+\end{figure}
+
+
+
+\subsection{Classe Exercicio}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_EXERCICIO.png}
+\end{figure}
+
+
+\subsection{Classe Treino}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_TREINO.png}
+\end{figure}
+\subsection{Classe SerieExecutada}
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{UMLs/UML_SERIE_EXECUTADA.png}
+\end{figure}
+
+\subsection{Classe RotinaTreino}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_ROTINA_DE_TREINO.png}
+\end{figure}
+
+\subsection{Classe VinculoAlunoPersonal}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_VINCULO_ALUNO_PERSONAL.png}
+\end{figure}
+
+\subsection{Classe PlanoTreino}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_PLANO_TREINO.png}
+\end{figure}
+
+\subsection{Classe FeedbackTreino}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_FEEDBACK_TREINO.png}
+\end{figure}
+
+
+\subsection{Classe Mensagem}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{UMLs/UML_MENSAGEM.png}
+\end{figure}
+
+
+\section{Relacionamentos e Cardinalidades}
+
+\begin{longtable}{L{3.2cm} L{1.3cm} L{3.5cm} L{6cm}}
+\toprule
+\textbf{Classe A} & \textbf{Card.} & \textbf{Classe B} & \textbf{Descrição} \\
+\midrule
+\endfirsthead
+Usuario & N:1 & Perfil & Cada usuário possui um único perfil de acesso. \\
+Usuario & 1:N & Treino & Um aluno pode ter vários treinos registrados. \\
+Treino & 1:N & SerieExecutada & Um treino contém várias séries executadas. \\
+Exercicio & 1:N & SerieExecutada & Um exercício pode aparecer em várias séries. \\
+Usuario & 1:N & RotinaTreino & Um aluno pode criar várias rotinas. \\
+Usuario & 1:N & VinculoAlunoPersonal & Um aluno/personal pode ter vários vínculos. \\
+VinculoAlunoPersonal & 1:N & PlanoTreino & Um vínculo pode gerar vários planos de treino ao longo do tempo. \\
+Treino & 1:1 & FeedbackTreino & Cada treino pode ter um feedback do aluno associado. \\
+VinculoAlunoPersonal & 1:N & Mensagem & Um vínculo concentra o histórico de mensagens trocadas. \\
+\bottomrule
+\end{longtable}
+
+\textbf{Decisão de modelagem --- Técnicas combinadas:} bi-set, tri-set e monster set são modelados como múltiplas instâncias de \texttt{SerieExecutada} compartilhando o mesmo \texttt{grupoSequencia} e \texttt{tipoTecnica}, em vez de criar uma entidade separada para cada técnica. Essa decisão simplifica o modelo relacional e permite reaproveitar a mesma tabela para séries normais e combinadas, com a camada de Service validando a quantidade mínima de exercícios exigida por tipo (2 para bi-set, 3 para tri-set, 4+ para monster set).
+
+\section{Modelo Entidade-Relacionamento --- ER (Resumo das Tabelas)}
+
+\begin{longtable}{L{2.6cm} L{4.5cm} L{6.5cm}}
+\toprule
+\textbf{Tabela} & \textbf{Chave} & \textbf{Principais colunas} \\
+\midrule
+\endfirsthead
+USUARIO & PK id & nome, email (UNIQUE), senha\_hash, perfil\_id (FK), ativo \\
+PERFIL & PK id & nome \\
+EXERCICIO & PK id & nome, grupo\_muscular, descricao, instrucoes\_execucao, url\_midia \\
+TREINO & PK id, FK aluno\_id & data\_hora, observacoes \\
+SERIE\_EXECUTADA & PK id, FK treino\_id, FK exercicio\_id & numero\_serie, repeticoes, carga\_kg, tipo\_tecnica, grupo\_sequencia \\
+ROTINA\_TREINO & PK id, FK aluno\_id & nome \\
+VINCULO\_ALUNO\_PERSONAL & PK id, FK aluno\_id, FK personal\_id & status, data\_vinculo \\
+PLANO\_TREINO & PK id, FK vinculo\_id & nome, data\_criacao \\
+FEEDBACK\_TREINO & PK id, FK treino\_id & percepcao\_esforco, relato\_dor, observacoes \\
+MENSAGEM & PK id, FK vinculo\_id, FK remetente\_id & conteudo, data\_hora, lida \\
+\bottomrule
+\end{longtable}
+
+\section{Casos de Uso}
+
+\subsection{Casos de Uso do Aluno}
+\textbf{UC01 --- Cadastrar-se e autenticar-se:} o aluno cria uma conta e realiza login (RF01, RF02).\\
+\textbf{UC02 --- Registrar treino:} o aluno registra exercícios, séries, repetições e cargas de uma sessão, podendo indicar técnicas de bi-set, tri-set, monster set ou drop set (RF04, RF09--RF12).\\
+\textbf{UC03 --- Consultar histórico e progressão:} o aluno visualiza seus treinos anteriores e a evolução de carga/volume por exercício (RF05, RF07).\\
+\textbf{UC04 --- Consultar instruções de execução:} o aluno visualiza como executar corretamente um exercício (RF13).\\
+\textbf{UC05 --- Criar rotina:} o aluno organiza exercícios em rotinas reutilizáveis (RF08).\\
+\textbf{UC06 --- Vincular-se a um personal trainer:} o aluno solicita vínculo a um personal (RFP02).\\
+\textbf{UC07 --- Visualizar plano de treino do personal:} o aluno consulta o treino montado pelo profissional (RFP04).\\
+\textbf{UC08 --- Registrar feedback:} o aluno relata esforço, dor ou observações após o treino (RFP05).\\
+\textbf{UC09 --- Conversar com o personal:} o aluno troca mensagens com o personal vinculado (RFP06).
+
+\subsection{Casos de Uso do Personal Trainer}
+\textbf{UC10 --- Aceitar vínculo de aluno:} o personal aceita ou recusa uma solicitação de vínculo (RFP02).\\
+\textbf{UC11 --- Montar plano de treino:} o personal cria um plano personalizado para um aluno vinculado (RFP03).\\
+\textbf{UC12 --- Editar plano de treino:} o personal ajusta um plano já existente (RFP09).\\
+\textbf{UC13 --- Acompanhar evolução dos alunos:} o personal consulta o histórico e os feedbacks de cada aluno vinculado (RFP08).
+
+\subsection{Casos de Uso do Administrador}
+\textbf{UC14 --- Gerenciar exercícios:} o administrador cadastra, atualiza ou remove exercícios do catálogo geral (RF03).\\
+\textbf{UC15 --- Gerenciar usuários:} o administrador ativa, desativa ou altera permissões de usuários do sistema.
+
+\textbf{Exemplo detalhado --- UC02 (Registrar treino com bi-set):}
+\begin{description}[leftmargin=1.2cm]
+    \item[Objetivo:] Registrar uma sessão de treino contendo uma combinação de bi-set.
+    \item[Pré-condições:] O aluno deve estar autenticado; os exercícios envolvidos devem estar previamente cadastrados.
+    \item[Fluxo principal:] (1) o aluno informa os dois exercícios do bi-set, com suas respectivas repetições e cargas; (2) o sistema valida que há exatamente dois exercícios associados ao mesmo \texttt{grupoSequencia}; (3) o sistema persiste as séries com \texttt{tipoTecnica = BI\_SET}; (4) o sistema retorna o treino registrado, incluindo o 1RM estimado de cada exercício.
+    \item[Fluxo alternativo:] Caso apenas um exercício seja informado para um bi-set, o sistema rejeita o registro e retorna erro de validação (RNF12).
+\end{description}
+
+\section{Arquitetura da Aplicação}
+
+O RepMax adota a arquitetura em camadas (Controller, Service, Repository, Entity), amplamente utilizada em aplicações Spring Boot, complementada pelo uso de DTOs.
+
+\begin{itemize}
+    \item \textbf{Controller:} recebe as requisições HTTP, realiza validação básica e delega à camada de Service, retornando DTOs de resposta.
+    \item \textbf{Service:} concentra as regras de negócio --- cálculo de 1RM, validação de técnicas combinadas (bi-set/tri-set/monster set/drop set), regras de vínculo aluno-personal.
+    \item \textbf{Repository:} acessa o PostgreSQL via Spring Data JPA, com consultas personalizadas para histórico e progressão.
+    \item \textbf{Entity:} representa as tabelas do banco descritas na Seção 9, mapeando os relacionamentos com anotações JPA (\texttt{@OneToMany}, \texttt{@ManyToOne}, \texttt{@OneToOne}).
+    \item \textbf{DTO:} evita a exposição direta das entidades, com exemplos como \texttt{TreinoRequestDTO}, \texttt{TreinoResponseDTO}, \texttt{SerieExecutadaDTO}, \texttt{ProgressoDTO} e \texttt{PlanoTreinoDTO}.
+\end{itemize}
+
+\section{Endpoints da API (Principais)}
+
+\begin{longtable}{L{1.6cm} L{6cm} L{6cm}}
+\toprule
+\textbf{Método} & \textbf{Endpoint} & \textbf{Descrição} \\
+\midrule
+\endfirsthead
+POST & /api/usuarios & Cadastra um novo usuário. \\
+POST & /api/auth/login & Autentica um usuário. \\
+GET/POST & /api/exercicios & Lista ou cadastra exercícios. \\
+GET & /api/exercicios/\{id\}/instrucoes & Retorna as instruções de execução de um exercício. \\
+POST & /api/treinos & Registra um novo treino. \\
+GET & /api/alunos/\{id\}/treinos & Lista o histórico de treinos de um aluno. \\
+GET & /api/alunos/\{id\}/progresso/\{exercicioId\} & Retorna a evolução de carga/volume de um exercício. \\
+POST & /api/rotinas & Cria uma rotina de treino. \\
+POST & /api/vinculos & Solicita vínculo entre aluno e personal. \\
+PUT & /api/vinculos/\{id\}/aceitar & Personal aceita um vínculo pendente. \\
+DELETE & /api/vinculos/\{id\} & Encerra um vínculo entre aluno e personal. \\
+POST & /api/planos-treino & Personal monta um plano de treino para o aluno. \\
+POST & /api/treinos/\{id\}/feedback & Aluno registra feedback de um treino. \\
+POST & /api/mensagens & Envia uma mensagem no chat aluno-personal. \\
+GET & /api/vinculos/\{id\}/mensagens & Lista o histórico de mensagens de um vínculo. \\
+\bottomrule
+\end{longtable}
+
+\section{Regras de Negócio}
+
+\begin{enumerate}[label=\arabic*.]
+    \item A carga registrada em uma série não pode ser negativa; o número de repetições deve ser maior que zero.
+    \item Um bi-set deve conter exatamente dois exercícios distintos no mesmo \texttt{grupoSequencia}; um tri-set, exatamente três; um monster set, quatro ou mais.
+    \item Em um drop set, a carga de cada série subsequente deve ser estritamente menor que a da série anterior dentro do mesmo exercício.
+    \item O cálculo de 1RM deve utilizar a fórmula de Epley e ser restrito a séries com até 10--12 repetições, faixa em que a fórmula mantém boa precisão.
+    \item Um vínculo entre aluno e personal só é efetivado mediante aceite explícito do personal.
+    \item Um plano de treino só pode ser criado ou editado pelo personal vinculado ao aluno correspondente.
+    \item Um aluno não pode acessar o histórico ou os planos de treino de outro aluno, salvo o personal, que acessa apenas os dados dos alunos a ele vinculados.
+    \item O sistema deve impedir a criação de séries, feedbacks ou mensagens vinculados a treinos ou usuários inexistentes.
+    \item Alertas e sugestões do sistema (ex.: progresso estagnado) têm caráter informativo e não substituem a orientação de um profissional de educação física.
+\end{enumerate}
+
+\section{Segurança e Privacidade}
+
+\begin{itemize}
+    \item \textbf{Autenticação:} obrigatória para acesso a qualquer recurso protegido da API (JWT).
+    \item \textbf{Autorização por perfil (RBAC):} aluno, personal trainer e administrador possuem permissões distintas.
+    \item \textbf{Criptografia de senhas:} armazenamento via Argon2.
+    \item \textbf{Validação de entrada:} todos os dados recebidos devem ser validados antes do processamento.
+    \item \textbf{Proteção de dados entre usuários:} um aluno só acessa seus próprios dados; um personal só acessa dados de alunos vinculados e aceitos.
+    \item \textbf{HTTPS em produção:} toda comunicação deve ocorrer de forma criptografada em um eventual ambiente de produção.
+\end{itemize}
+
+\section{Conclusão}
+
+O sistema RepMax, apresentado ao longo desta documentação, propõe uma solução estruturada para o registro e acompanhamento de treinos de musculação, contemplando desde funcionalidades básicas de um log book até técnicas avançadas de intensidade (bi-set, tri-set, monster set e drop set) e um modelo colaborativo entre aluno e personal trainer. O projeto foi concebido de forma incremental, iniciando em um escopo simples e evoluindo em fases, o que permite consolidar conceitos de Java, Spring Boot e persistência com JPA/PostgreSQL ao longo do desenvolvimento.
+
+Reforça-se que, no momento desta entrega, nenhuma das funcionalidades apresentadas foi implementada: este documento reflete integralmente a fase de análise e especificação do projeto, servindo de base para as etapas subsequentes de implementação.
+
+\section{Referências}
+
+\begin{itemize}
+    \item SOCIEDADE BRASILEIRA DE ENDOCRINOLOGIA E METABOLOGIA (SBEM). \textit{Dados sobre a prática de atividade física no Brasil}. [link oficial e ano --- campo editável].
+    \item ORACLE CORPORATION. \textit{Java Documentation}. [link oficial --- campo editável].
+    \item VMWARE / SPRING TEAM. \textit{Spring Boot Reference Documentation}. [link oficial --- campo editável].
+    \item VMWARE / SPRING TEAM. \textit{Spring Data JPA --- Reference Documentation}. [link oficial --- campo editável].
+    \item VMWARE / SPRING TEAM. \textit{Spring Security Reference Documentation}. [link oficial --- campo editável].
+    \item THE POSTGRESQL GLOBAL DEVELOPMENT GROUP. \textit{PostgreSQL Documentation}. [link oficial --- campo editável].
+    \item OBJECT MANAGEMENT GROUP (OMG). \textit{Unified Modeling Language (UML) Specification}. [versão e link --- campo editável].
+    \item EPLEY, B. \textit{Poundage Chart}. Boyd Epley Workout, 1985. [referência da fórmula de 1RM --- campo editável].
+    \item PRESSMAN, R. S.; MAXIM, B. R. \textit{Engenharia de Software: uma abordagem profissional}. [edição e ano --- campo editável].
+\end{itemize}
+
+\end{document}
 \end{document}
