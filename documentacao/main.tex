@@ -1,0 +1,42 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{graphicx}
+\usepackage{float}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    pdftitle={RepMax - Analise e Defesa de Projeto},
+    pdfauthor={Artur Pereira e Zadoque Carneiro}
+}
+
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{\textbf{RepMax}\\[0.2cm]
+\Large Sistema de Log Book de Treino de Academia\\[0.2cm]
+\large Documentação de Análise, Requisitos e Arquitetura do Sistema}
+\author{Artur Pereira e Zadoque Carneiro}
+\date{Disciplina: POODev}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
