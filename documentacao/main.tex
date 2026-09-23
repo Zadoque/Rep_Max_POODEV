@@ -64,3 +64,31 @@ Observam-se, entre praticantes de musculação, as seguintes dificuldades recorr
 \end{itemize}
 
 \subsection{Proposta do Trabalho}
+Embora esse projeto tenha como objetivo principal resolver o problema de negócio e agragar valor para o cliente, há também o propósito de aprendizado de conceitos. Por isso, esse trabalho propõe o desenvolvimento de uma API RESTful para um sistema de log book de treino, denominado \textbf{RepMax}. E uma interface WEB usando: React + Typescript + Tailwind CSS + React Router (\textbr{Data Mode}) + Vite + fetch() para interagir com ela (Mais abaixo tem a justificativa para o uso de cada parte da interface). A solução tem como objetivo permitir que o usuário registre seus treinos de forma estruturada, acompanhe sua progressão por meio de indicadores, tais como: a repetição máxima estimada (1RM),  técnicas avançadas de intensidade e, em uma segunda versão do sistema, viabilize a atuação de um personal trainer na montagem de treinos e no acompanhamento de alunos.
+
+\section{Descrição Geral do Sistema}
+
+\subsection{API RESTful}
+
+Ela será responsável por gerenciar o histórico de treino de usuários. De forma geral, o sistema deverá permitir:
+
+\begin{itemize}
+    \item Cadastrar e autenticar usuários (alunos, personais e admins);
+    \item Cadastrar exercícios, com grupo muscular e instruções de execução;
+    \item Registrar treinos, associando exercícios, séries, repetições e cargas;
+    \item Registrar séries em formatos de intensificação: bi-set, tri-set, monster set e drop set;
+    \item Calcular a repetição máxima estimada (1RM) a partir de carga e repetições;
+    \item Consultar o histórico e a evolução de desempenho por exercício;
+    \item (Versão 2) Vincular aluno e personal trainer, permitindo que o personal monte treinos, o aluno registre feedback e ambos se comuniquem dentro do próprio sistema.
+\end{itemize}
+
+\subsection{Interface WEB:}
+O conjunto de tecnologia (stack) foi escolhido para viabilizar o aprendizado de conceitos como: rotas, cache, segurança, server-side e client-side.
+Vite -> Ferramenta responsável pelo ambiente dev e processo de build do front-end
+React -> Biblioteca de UI, para construção e navegação na interface.
+Tailwind CSS -> Para estilização.
+React Router no modo Data -> Não faz mágica sozinho, mas traz ferramentas para eu aprender e usar como Rotas, Loader, Action e Estados de navegação.
+fetch() -> Para fazer requisição à API RESTful.
+
+Esse conjunto permite que tenhamos um equilíbrio entre conceitos a aprender e aplicar e prazo de entrega. 
+\end{document}
