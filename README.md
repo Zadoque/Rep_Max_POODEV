@@ -5,7 +5,7 @@ Esse repositório será usado para versionar e controlar nosso processo de apren
 # Introdução:
 O Rep Max será um Sistema de Log Book de Treino de Academia. Ele resolverá os problemas listados abaixo:
 
-<ul style="color: red;">
+<ul >
   <li>Ausência de um histórico organizado de séries, repetições e cargas utilizadas em cada treino;</li>
   <li>Dificuldade de identificar se um exercício está em progressão, estagnação ou regressão de desempenho;</li>
   <li>Falta de suporte para técnicas de intensificação de treino (bi-set, tri-set, monster set e drop set), que hoje são anotadas de forma manual e pouco estruturada;</li>
@@ -15,7 +15,8 @@ O Rep Max será um Sistema de Log Book de Treino de Academia. Ele resolverá os 
 
 # Uso de IA nesse projeto:
 
-<div style="color:red;"> O uso de IA é totalmente desencorado pelo nosso querido professor. Isso tem como objetivo que realmente possamos aprender os conceitos. A IA será usada expressamente apenas para fazer auditoria, não modificação, e também para criação de commits descritivos, sempre validados e corrigidos caso fiquem genéricos. </div>
+> [!WARNING]
+> O uso de IA é totalmente desencorajado pelo nosso querido professor. Isso tem como objetivo que realmente possamos aprender os conceitos. A IA será usada expressamente apenas para fazer auditoria, não modificação, e também para criação de commits descritivos, sempre validados e corrigidos caso fiquem genéricos.
 
 # Fase 1:
 ## Documentação e Requisitos:
