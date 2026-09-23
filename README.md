@@ -16,7 +16,7 @@ Como o repMax resolve isso é detalhado na documentação.
 
 # Quem está fazendo esse projeto:
 
-O Projeto é feito pela dupla de alunos Zadoque Pires de Deus Souza Carneiro (vulgo EU) e Artur Pereira da Silva. Embora no histórico do github aqui só eu esteja commitando agora nesse exato o momento, Artur já fez boa parta da documentação no que tange a API RESTfull, requisitos, orçamento, etc. O que explica o fato de que eu não vou (espero pelo menos) levar a noite toda para terminar essa parte. 
+O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (vulgo EU) e Artur Pereira da Silva. Embora no histórico do github aqui só eu esteja commitando agora nesse exato o momento, Artur já fez boa parta da documentação no que tange a API RESTfull, requisitos, orçamento, etc. O que explica o fato de que eu não vou (espero pelo menos) levar a noite toda para terminar essa parte. 
 
 # Uso de IA nesse projeto:
 
