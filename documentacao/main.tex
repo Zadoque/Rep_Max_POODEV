@@ -628,29 +628,42 @@ O RepMax adota a arquitetura em camadas (Controller, Service, Repository, Entity
 
 \section{Endpoints da API (Principais)}
 
-\begin{longtable}{L{1.6cm} L{6cm} L{6cm}}
+\begin{longtable}{L{2.2cm} L{6cm} L{6cm}}
 \toprule
 \textbf{Método} & \textbf{Endpoint} & \textbf{Descrição} \\
 \midrule
 \endfirsthead
 POST & /api/usuarios & Cadastra um novo usuário. \\
+\hline
 POST & /api/auth/login & Autentica um usuário. \\
+\hline
 GET/POST & /api/exercicios & Lista ou cadastra exercícios. \\
+\hline
 GET & /api/exercicios/\{id\}/instrucoes & Retorna as instruções de execução de um exercício. \\
+\hline
 POST & /api/treinos & Registra um novo treino. \\
+\hline
 GET & /api/alunos/\{id\}/treinos & Lista o histórico de treinos de um aluno. \\
-GET & /api/alunos/\{id\}/progresso/\{exercicioId\} & Retorna a evolução de carga/volume de um exercício. \\
+\hline
+GET & /api/alunos/\{id\}/progresso/ \newline\{exercicioId\} & Retorna a evolução de carga/volume de um exercício. \\
+\hline
 POST & /api/rotinas & Cria uma rotina de treino. \\
+\hline
 POST & /api/vinculos & Solicita vínculo entre aluno e personal. \\
+\hline
 PUT & /api/vinculos/\{id\}/aceitar & Personal aceita um vínculo pendente. \\
+\hline
 DELETE & /api/vinculos/\{id\} & Encerra um vínculo entre aluno e personal. \\
+\hline
 POST & /api/planos-treino & Personal monta um plano de treino para o aluno. \\
+\hline
 POST & /api/treinos/\{id\}/feedback & Aluno registra feedback de um treino. \\
+\hline
 POST & /api/mensagens & Envia uma mensagem no chat aluno-personal. \\
+\hline
 GET & /api/vinculos/\{id\}/mensagens & Lista o histórico de mensagens de um vínculo. \\
 \bottomrule
 \end{longtable}
-
 \section{Regras de Negócio}
 \subsection{Não negatividade da carga}
 \begin{regra}
