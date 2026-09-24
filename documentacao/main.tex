@@ -526,7 +526,6 @@ Sprint 6 & Semana 11--12 & Versão 2: vínculo aluno-personal, montagem de plano
 \includegraphics[width=0.5\linewidth]{UMLs/UML_MENSAGEM.png}
 \end{figure}
 
-
 \section{Relacionamentos e Cardinalidades}
 
 \begin{longtable}{L{3.2cm} L{1.3cm} L{3.5cm} L{6cm}}
@@ -535,14 +534,22 @@ Sprint 6 & Semana 11--12 & Versão 2: vínculo aluno-personal, montagem de plano
 \midrule
 \endfirsthead
 Usuario & N:1 & Perfil & Cada usuário possui um único perfil de acesso. \\
+\hline
 Usuario & 1:N & Treino & Um aluno pode ter vários treinos registrados. \\
+\hline
 Treino & 1:N & SerieExecutada & Um treino contém várias séries executadas. \\
+\hline
 Exercicio & 1:N & SerieExecutada & Um exercício pode aparecer em várias séries. \\
+\hline
 Usuario & 1:N & RotinaTreino & Um aluno pode criar várias rotinas. \\
-Usuario & 1:N & VinculoAlunoPersonal & Um aluno/personal pode ter vários vínculos. \\
-VinculoAlunoPersonal & 1:N & PlanoTreino & Um vínculo pode gerar vários planos de treino ao longo do tempo. \\
+\hline
+Usuario & 1:N & VinculoAluno\newline Personal & Um aluno/personal pode ter vários vínculos. \\
+\hline
+VinculoAluno\newline Personal & 1:N & PlanoTreino & Um vínculo pode gerar vários planos de treino ao longo do tempo. \\
+\hline
 Treino & 1:1 & FeedbackTreino & Cada treino pode ter um feedback do aluno associado. \\
-VinculoAlunoPersonal & 1:N & Mensagem & Um vínculo concentra o histórico de mensagens trocadas. \\
+\hline
+VinculoAluno\newline Personal & 1:N & Mensagem & Um vínculo concentra o histórico de mensagens trocadas. \\
 \bottomrule
 \end{longtable}
 
