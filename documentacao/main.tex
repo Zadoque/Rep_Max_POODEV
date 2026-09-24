@@ -637,18 +637,39 @@ GET & /api/vinculos/\{id\}/mensagens & Lista o histórico de mensagens de um ví
 \end{longtable}
 
 \section{Regras de Negócio}
+\subsection{Não negatividade da carga}
+\begin{regra}
+    A carga registrada em uma série não pode ser negativa; o número de repetições deve ser maior que zero.
+\end{regra}
+\subsection{Enumeração de bi-set, tri-set e monster-set}
+\begin{regra}
+    Um bi-set deve conter exatamente dois exercícios distintos no mesmo \textbf{grupoSequencia}; um tri-set, exatamente três; um monster set, quatro ou mais.
+\end{regra}
+\subsection{Diminuição da carga em drop set}
+\begin{regra}
+    Em um drop set, a carga de cada série subsequente deve ser estritamente menor que a da série anterior dentro do mesmo exercício.
+\end{regra}
+\subsection{Fórmula do cálculo de 1RM e restrição a quantidade de repetições}
+\begin{regra}
+    Em cálculo de 1RM deve utilizar a fórmula de Epley e ser restrito a séries com até 10--12 repetições, faixa em que a fórmula mantém boa precisão.
+\end{regra}
+\subsection{Convite para Aluno}
+\begin{regra}
+     Um vínculo entre aluno e personal só é efetivado mediante aceite explícito do aluno após convite feito pelo personal.
+\end{regra}
+\subsection{Edição de plano de treino para aluno com personal:}
+\begin{regra}
+    Quando um aluno é vinculado a um personal, o plano de treino só pode ser criado ou editado pelo personal.
+\end{regra}
+\subsection{Um aluno não pode visualizar treinos e histórico de outro aluno}
+\begin{regra}
+    Um aluno não pode acessar o histórico ou os planos de treino de outro aluno, salvo o personal, que acessa apenas os dados dos alunos a ele vinculados.
+\end{regra}
+\subsection{Transparência no propósito de feedbacks do Rep Max}
+\begin{regra}
+    Alertas e sugestões do sistema (ex.: progresso estagnado) têm caráter informativo e não substituem a orientação de um profissional de educação física.
+\end{regra}
 
-\begin{enumerate}[label=\arabic*.]
-    \item A carga registrada em uma série não pode ser negativa; o número de repetições deve ser maior que zero.
-    \item Um bi-set deve conter exatamente dois exercícios distintos no mesmo \texttt{grupoSequencia}; um tri-set, exatamente três; um monster set, quatro ou mais.
-    \item Em um drop set, a carga de cada série subsequente deve ser estritamente menor que a da série anterior dentro do mesmo exercício.
-    \item O cálculo de 1RM deve utilizar a fórmula de Epley e ser restrito a séries com até 10--12 repetições, faixa em que a fórmula mantém boa precisão.
-    \item Um vínculo entre aluno e personal só é efetivado mediante aceite explícito do personal.
-    \item Um plano de treino só pode ser criado ou editado pelo personal vinculado ao aluno correspondente.
-    \item Um aluno não pode acessar o histórico ou os planos de treino de outro aluno, salvo o personal, que acessa apenas os dados dos alunos a ele vinculados.
-    \item O sistema deve impedir a criação de séries, feedbacks ou mensagens vinculados a treinos ou usuários inexistentes.
-    \item Alertas e sugestões do sistema (ex.: progresso estagnado) têm caráter informativo e não substituem a orientação de um profissional de educação física.
-\end{enumerate}
 
 \section{Segurança e Privacidade}
 
