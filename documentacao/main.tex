@@ -550,24 +550,32 @@ VinculoAlunoPersonal & 1:N & Mensagem & Um vínculo concentra o histórico de me
 
 \section{Modelo Entidade-Relacionamento --- ER (Resumo das Tabelas)}
 
-\begin{longtable}{L{2.6cm} L{4.5cm} L{6.5cm}}
+\begin{longtable}{L{4.6cm} L{4.5cm} L{6.5cm}}
 \toprule
 \textbf{Tabela} & \textbf{Chave} & \textbf{Principais colunas} \\
 \midrule
 \endfirsthead
 USUARIO & PK id & nome, email (UNIQUE), senha\_hash, perfil\_id (FK), ativo \\
+\hline
 PERFIL & PK id & nome \\
+\hline
 EXERCICIO & PK id & nome, grupo\_muscular, descricao, instrucoes\_execucao, url\_midia \\
+\hline
 TREINO & PK id, FK aluno\_id & data\_hora, observacoes \\
+\hline
 SERIE\_EXECUTADA & PK id, FK treino\_id, FK exercicio\_id & numero\_serie, repeticoes, carga\_kg, tipo\_tecnica, grupo\_sequencia \\
+\hline
 ROTINA\_TREINO & PK id, FK aluno\_id & nome \\
-VINCULO\_ALUNO\_PERSONAL & PK id, FK aluno\_id, FK personal\_id & status, data\_vinculo \\
+\hline
+VINCULO\_ALUNO\_\newline PERSONAL & PK id, FK aluno\_id, FK personal\_id & status, data\_vinculo \\
+\hline
 PLANO\_TREINO & PK id, FK vinculo\_id & nome, data\_criacao \\
+\hline
 FEEDBACK\_TREINO & PK id, FK treino\_id & percepcao\_esforco, relato\_dor, observacoes \\
+\hline
 MENSAGEM & PK id, FK vinculo\_id, FK remetente\_id & conteudo, data\_hora, lida \\
 \bottomrule
 \end{longtable}
-
 \section{Casos de Uso}
 
 \subsection{Casos de Uso do Aluno}
