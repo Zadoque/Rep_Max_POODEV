@@ -65,7 +65,111 @@ Observam-se, entre praticantes de musculação, as seguintes dificuldades recorr
 
 \subsection{Proposta do Trabalho}
 Embora esse projeto tenha como objetivo principal resolver o problema de negócio e agragar valor para o cliente, há também o propósito de aprendizado de conceitos. Por isso, esse trabalho propõe o desenvolvimento de uma API RESTful para um sistema de log book de treino, denominado \textbf{RepMax}. E uma interface WEB usando: React + Typescript + Tailwind CSS + React Router (\textbf{Data Mode}) + Vite + fetch() para interagir com ela (Mais abaixo tem a justificativa para o uso de cada parte da interface). A solução tem como objetivo permitir que o usuário registre seus treinos de forma estruturada, acompanhe sua progressão por meio de indicadores, tais como: a repetição máxima estimada (1RM),  técnicas avançadas de intensidade e, em uma segunda versão do sistema, viabilize a atuação de um personal trainer na montagem de treinos e no acompanhamento de alunos.
+\newpage
+\section{StakeHolders}
+\paragraph{O Rep Max terá 5 visões diferentes sobre o sistema: Aluno sem Personal, Aluno com Personal, Personal sem Personal, Personal com personal e ADMIN}
+\subsection{Aluno sem personal}
+Um aluno sem personal é um usuário cadastrado no sistema que não possui vínculo com um personal.
+Ele pode:
+\begin{itemize}
+    \item Se cadastrar no sistema com email e senha;
+    \item Fazer login no sistema com email e senha;
+    \item Trocar sua senha com código enviado por email;
+    \item Criar uma nova rotina de treino;
+    \item Visualizar suas próprias rotinas de treino;
+    \item Editar uma rotina de treino;
+        \begin{itemize}
+            \item Substituir um exercício por outro;
+            \item Excluir um execício;
+            \item Adicionar um exercício;
+            \item Editar um exercíco;
+                \begin{itemize}
+                    \item Alterar o número de séries;
+                \end{itemize}
+        \end{itemize}
+    \item Exlcuir uma rotina de treino;
+    \item Começar uma rotina de treino; 
+    \item Pausar uma rotina de treino;
+    \item Encerrar uma rotina de treino;
+    \item Aceitar um convite de um personal trainer;
+    \item Recusar um convite de um personal trainer;
+    \item Visualizar o próprio histórico em calendário;
+\end{itemize}
 
+\subsection{Aluno com personal}
+Um aluno com personal é um usuário cadastrado no sistema que possui possui vínculo com um personal. Ele pode ter sido um aluno sem personal anteriormente e futuramente voltar a ser um aluno sem personal.
+Ele pode:
+\begin{itemize}
+    \item Se cadastrar no sistema com email e senha;
+    \item Fazer login no sistema com email e senha;
+    \item Trocar sua senha com código enviado por email;
+    \item Visualizar suas próprias rotinas de treino;
+    \item Começar uma rotina de treino; 
+    \item Pausar uma rotina de treino;
+    \item Encerrar uma rotina de treino;
+    \item Aceitar um convite de outro personal trainer (isso encerra o vínculo com o personal atual);
+    \item Encerrar o vínculo com o seu personal trainer;
+    \item Visualizar o próprio histórico em calendário;
+\end{itemize}
+\subsection{Personal sem Personal}
+Um Personal é um usuário cadastrado no sistema que é um personal. 
+Ele pode fazer tudo que um aluno sem Personal pode fazer e tabmém:
+\begin{itemize}
+    \item Convidar um Usuário pelo email para ser personal daquele usuário;
+    \item Visualizar os status dos convites feitos por ele;
+    \item Encerrar o vínculo com um aluno; 
+    \item Visualizar os alunos  com quais ele possui vínculo;
+    \item Selecionar um aluno 
+    \item Criar uma nova rotina de treino para um aluno;
+    \item Visualizar as rotinas de treino de um aluno;
+    \item Editar uma rotina de treino de um aluno;
+        \begin{itemize}
+            \item Substituir um exercício por outro;
+            \item Excluir um execício;
+            \item Adicionar um exercício;
+            \item Editar um exercíco;
+                \begin{itemize}
+                    \item Alterar o número de séries;
+                \end{itemize}
+        \end{itemize}
+    \item Exlcuir uma rotina de treino;
+\end{itemize}
+\subsection{Personal com Personal}
+Um Personal é um usuário cadastrado no sistema que é um personal e possui vínculo com outro personal onde ele é o aluno. 
+Ele pode fazer tudo que um aluno com Personal pode fazer e tabmém:
+\begin{itemize}
+    \item Convidar um Usuário pelo email para ser personal daquele usuário;
+    \item Visualizar os status dos convites feitos por ele;
+    \item Encerrar o vínculo com um aluno; 
+    \item Visualizar os alunos  com quais ele possui vínculo;
+    \item Selecionar um aluno 
+    \item Criar uma nova rotina de treino para um aluno;
+    \item Visualizar as rotinas de treino de um aluno;
+    \item Editar uma rotina de treino de um aluno;
+        \begin{itemize}
+            \item Substituir um exercício por outro;
+            \item Excluir um execício;
+            \item Adicionar um exercício;
+            \item Editar um exercíco;
+                \begin{itemize}
+                    \item Alterar o número de séries;
+                \end{itemize}
+        \end{itemize}
+    \item Exlcuir uma rotina de treino;
+\end{itemize}
+\subsection{ADMIN}
+O usuário admin é o usuário que consgue gerenciar os outros usuários. 
+Ele pode:
+\begin{itemize}
+    \item Pesquisar por usuários no sistema;
+    \item Adicionar usuário como aluno no sistema;
+    \item Adiconar usuário como Personal no sistema;
+    \item Transformar um aluno em Personal;
+    \item Transforamr um Personal em aluno;
+    \item Enviar código para o email de um usuário para ele poder trocar sua senha;
+    \item Cadastrar Exercícios no sistema;
+    \item Editar Exercícios no sistema;
+\end{itemize}
 \section{Descrição Técnica do Sistema}
 
 \subsection{API RESTful}
