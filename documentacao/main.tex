@@ -78,9 +78,8 @@ Observam-se, entre praticantes de musculação, as seguintes dificuldades recorr
 Embora esse projeto tenha como objetivo principal resolver o problema de negócio e agragar valor para o cliente, há também o propósito de aprendizado de conceitos. Por isso, esse trabalho propõe o desenvolvimento de uma API RESTful para um sistema de log book de treino, denominado \textbf{RepMax}. E uma interface WEB usando: React + Typescript + Tailwind CSS + React Router (\textbf{Data Mode}) + Vite + fetch() para interagir com ela (Mais abaixo tem a justificativa para o uso de cada parte da interface). A solução tem como objetivo permitir que o usuário registre seus treinos de forma estruturada, acompanhe sua progressão por meio de indicadores, tais como: a repetição máxima estimada (1RM) e  técnicas avançadas de intensidade.
 \newpage
 \section{StakeHolders}
-\paragraph{O Rep Max terá 5 visões diferentes sobre o sistema: Aluno sem Personal, Aluno com Personal, Personal sem Personal, Personal com personal e ADMIN}
-\subsection{Aluno sem personal}
-Um aluno sem personal é um usuário cadastrado no sistema que não possui vínculo com um personal.
+\subsection{Aluno}
+Um aluno é um usuário cadastrado no sistema por um admin que não possui vínculo com um personal.
 Ele pode:
 \begin{itemize}
     \item Fazer login no sistema com email e senha;
@@ -101,81 +100,17 @@ Ele pode:
     \item Começar uma rotina de treino; 
     \item Pausar uma rotina de treino;
     \item Encerrar uma rotina de treino;
-    \item Aceitar um convite de um personal trainer;
-    \item Recusar um convite de um personal trainer;
     \item Visualizar o próprio histórico em calendário;
 \end{itemize}
 
-\subsection{Aluno com personal}
-Um aluno com personal é um usuário cadastrado no sistema que possui possui vínculo com um personal. Ele pode ter sido um aluno sem personal anteriormente e futuramente voltar a ser um aluno sem personal.
-Ele pode:
-\begin{itemize}
-    \item Se cadastrar no sistema com email e senha;
-    \item Fazer login no sistema com email e senha;
-    \item Trocar sua senha com código enviado por email;
-    \item Visualizar suas próprias rotinas de treino;
-    \item Começar uma rotina de treino; 
-    \item Pausar uma rotina de treino;
-    \item Encerrar uma rotina de treino;
-    \item Aceitar um convite de outro personal trainer (isso encerra o vínculo com o personal atual);
-    \item Encerrar o vínculo com o seu personal trainer;
-    \item Visualizar o próprio histórico em calendário;
-\end{itemize}
-\subsection{Personal sem Personal}
-Um Personal é um usuário cadastrado no sistema que é um personal. 
-Ele pode fazer tudo que um aluno sem Personal pode fazer e tabmém:
-\begin{itemize}
-    \item Convidar um Usuário pelo email para ser personal daquele usuário;
-    \item Visualizar os status dos convites feitos por ele;
-    \item Encerrar o vínculo com um aluno; 
-    \item Visualizar os alunos  com quais ele possui vínculo;
-    \item Selecionar um aluno 
-    \item Criar uma nova rotina de treino para um aluno;
-    \item Visualizar as rotinas de treino de um aluno;
-    \item Editar uma rotina de treino de um aluno;
-        \begin{itemize}
-            \item Substituir um exercício por outro;
-            \item Excluir um execício;
-            \item Adicionar um exercício;
-            \item Editar um exercíco;
-                \begin{itemize}
-                    \item Alterar o número de séries;
-                \end{itemize}
-        \end{itemize}
-    \item Exlcuir uma rotina de treino;
-\end{itemize}
-\subsection{Personal com Personal}
-Um Personal é um usuário cadastrado no sistema que é um personal e possui vínculo com outro personal onde ele é o aluno. 
-Ele pode fazer tudo que um aluno com Personal pode fazer e tabmém:
-\begin{itemize}
-    \item Convidar um Usuário pelo email para ser personal daquele usuário;
-    \item Visualizar os status dos convites feitos por ele;
-    \item Encerrar o vínculo com um aluno; 
-    \item Visualizar os alunos  com quais ele possui vínculo;
-    \item Selecionar um aluno 
-    \item Criar uma nova rotina de treino para um aluno;
-    \item Visualizar as rotinas de treino de um aluno;
-    \item Editar uma rotina de treino de um aluno;
-        \begin{itemize}
-            \item Substituir um exercício por outro;
-            \item Excluir um execício;
-            \item Adicionar um exercício;
-            \item Editar um exercíco;
-                \begin{itemize}
-                    \item Alterar o número de séries;
-                \end{itemize}
-        \end{itemize}
-    \item Exlcuir uma rotina de treino;
-\end{itemize}
 \subsection{ADMIN}
 O usuário admin é o usuário que consgue gerenciar os outros usuários. 
 Ele pode:
 \begin{itemize}
     \item Pesquisar por usuários no sistema;
     \item Adicionar usuário como aluno no sistema;
-    \item Adiconar usuário como Personal no sistema;
-    \item Transformar um aluno em Personal;
-    \item Transforamr um Personal em aluno;
+    \item Adiconar usuário como Admin no sistema;
+    \item Remover um usuário aluno do sistema;
     \item Enviar código para o email de um usuário para ele poder trocar sua senha;
     \item Cadastrar Exercícios no sistema;
     \item Editar Exercícios no sistema;
@@ -187,7 +122,7 @@ Ele pode:
 Ela será responsável por gerenciar o histórico de treino de usuários. De forma geral, o sistema deverá permitir:
 
 \begin{itemize}
-    \item Cadastrar e autenticar usuários (alunos, personais e admins);
+    \item Cadastrar e autenticar usuários (alunos e admins);
     \item Cadastrar exercícios, com grupo muscular e instruções de execução;
     \item Registrar treinos, associando exercícios, séries, repetições e cargas;
     \item Registrar séries em formatos de intensificação: bi-set, tri-set, monster set e drop set;
@@ -266,8 +201,8 @@ Por se tratar de um projeto acadêmico desenvolvido por dois alunos, não há cu
 Hora técnica & Valor médio de referência para desenvolvedor júnior/estudante & R\$ 75,00 \\
 Horas diárias & 2 a 3 horas em dias úteis (média de 2,5h), por desenvolvedor & --- \\
 Semanas estimadas & 12 semanas & --- \\
-Total de horas & 2,5h × 5 dias × 12 semanas × 2 desenvolvedores & \(\approx\) 300 horas \\
-Custo total estimado & 300 horas × R\$ 75,00 & \(\approx\) R\$ 22.500,00 \\
+Total de horas & 1h e 40 × 5 dias × 12 semanas × 2 desenvolvedores & \(\approx\) 240 horas \\
+Custo total estimado & 240 horas × R\$ 75,00 & \(\approx\) R\$ 18.000,00 \\
 \bottomrule
 \end{longtable}
 
@@ -288,7 +223,6 @@ Registro incorreto de séries combinadas (bi-set/tri-set/monster set) & Alto & M
 Cálculo impreciso da carga máxima estimada & Médio & Baixa & Cobrir a fórmula de 1RM com testes unitários e restringir seu uso a faixas de repetição confiáveis (até 10-12 reps). \\
 Falhas no vínculo aluno-personal & Alto & Média & Exigir aceite mútuo e validar unicidade do vínculo ativo antes de novas solicitações. \\
 Exposição indevida de dados entre alunos & Alto & Média & Utilizar DTOs e controle de acesso por perfil (RBAC), garantindo que um usuário só acesse seus próprios dados ou os de alunos vinculados. \\
-Sobrecarga na comunicação em tempo real (chat) & Médio & Média & Implementar o chat via WebSocket com filas e reconexão, validando antes com uma versão simplificada (polling). \\
 Atraso no cronograma devido à carga horária limitada & Médio & Alta & Adotar metodologia ágil com priorização das funcionalidades essenciais (Fase 1) antes das avançadas (Fases 2 e 3). \\
 Dificuldade de aprendizado de tecnologias novas (WebSocket, Docker) & Médio & Alta & Reservar tempo para estudo dirigido e priorizar documentação oficial das tecnologias. \\
 \bottomrule
@@ -296,7 +230,7 @@ Dificuldade de aprendizado de tecnologias novas (WebSocket, Docker) & Médio & A
 
 \section{Requisitos do Sistema}
 
-\subsection{Requisitos Funcionais --- Versão 1 (Individual)}
+\subsection{Requisitos Funcionais}
 
 \begin{longtable}{L{1.4cm} L{9.8cm} L{1.6cm} L{1.8cm}}
 \toprule
@@ -325,7 +259,7 @@ RF15 & Permitir a filtragem do histórico por período, exercício ou grupo musc
 \bottomrule
 \end{longtable}
 
-\subsection{Requisitos Não Funcionais --- Versão 1}
+\subsection{Requisitos Não Funcionais }
 
 \begin{longtable}{L{1.6cm} L{10.4cm} L{1.9cm}}
 \toprule
@@ -351,56 +285,13 @@ RNF12 & Validar dados obrigatórios antes da persistência (carga não negativa,
 \bottomrule
 \end{longtable}
 
-\subsection{Requisitos Funcionais --- Versão 2 (Personal Trainer)}
 
-\begin{longtable}{L{1.6cm} L{9.6cm} L{1.6cm} L{1.7cm}}
-\toprule
-\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
-\midrule
-\endfirsthead
-\toprule
-\textbf{ID} & \textbf{Descrição} & \textbf{Prior.} & \textbf{Status} \\
-\midrule
-\endhead
-RFP01 & Permitir o cadastro de um usuário com perfil de personal trainer, distinto do perfil de aluno. & Alta & Não implementado \\
-RFP02 & Permitir a vinculação entre personal trainer e aluno, mediante solicitação e aceite mútuo. & Alta & Não implementado \\
-RFP03 & Permitir que o personal monte planos de treino personalizados para o aluno, com exercícios, séries, cargas e técnicas de intensidade. & Alta & Não implementado \\
-RFP04 & Permitir que o aluno visualize o treino montado pelo personal. & Alta & Não implementado \\
-RFP05 & Permitir que o aluno registre feedback após a execução do treino (esforço, dor, observações). & Alta & Não implementado \\
-RFP06 & Permitir a troca de mensagens (chat) entre personal e aluno vinculados. & Alta & Não implementado \\
-RFP07 & Notificar o personal quando o aluno registrar feedback ou concluir um treino. & Média & Não implementado \\
-RFP08 & Permitir que o personal acompanhe a evolução de cada aluno vinculado. & Média & Não implementado \\
-RFP09 & Permitir que o personal edite um plano de treino já existente. & Média & Não implementado \\
-RFP10 & Permitir que um personal gerencie múltiplos alunos simultaneamente. & Média & Não implementado \\
-RFP11 & Permitir que o aluno desvincule-se de um personal a qualquer momento. & Baixa & Não implementado \\
-\bottomrule
-\end{longtable}
-
-\subsection{Requisitos Não Funcionais --- Versão 2}
-
-\begin{longtable}{L{1.8cm} L{10cm} L{1.9cm}}
-\toprule
-\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
-\midrule
-\endfirsthead
-\toprule
-\textbf{ID} & \textbf{Descrição} & \textbf{Status} \\
-\midrule
-\endhead
-RNFP01 & Comunicação em tempo real via WebSocket para o chat entre personal e aluno. & Não implementado \\
-RNFP02 & Controle de acesso baseado em papéis (RBAC): aluno, personal, administrador. & Não implementado \\
-RNFP03 & Suporte a múltiplos alunos vinculados a um mesmo personal sem degradação de desempenho perceptível. & Não implementado \\
-RNFP04 & Histórico de mensagens persistido e recuperável. & Não implementado \\
-RNFP05 & Notificações (push ou e-mail) para eventos relevantes (novo treino, feedback recebido). & Não implementado \\
-RNFP06 & Tratamento de dados pessoais em conformidade com a LGPD, com acesso restrito por vínculo aluno-personal. & Não implementado \\
-\bottomrule
-\end{longtable}
 
 
 \section{Diagramas de Fluxo de Dados --- DFD}
 
 \subsection{DFD de Contexto}
-O sistema RepMax é representado como um processo único, interagindo com três atores externos (Aluno, Personal Trainer e Administrador) e com o banco de dados PostgreSQL. Os principais fluxos são: dados de cadastro e treino (Aluno \(\rightarrow\) Sistema), planos de treino montados (Personal \(\rightarrow\) Sistema \(\rightarrow\) Aluno), feedback e mensagens (Aluno \(\leftrightarrow\) Sistema \(\leftrightarrow\) Personal), operações de leitura/gravação junto ao banco de dados, e respostas da API para todos os atores.
+O sistema RepMax é representado como um processo único, interagindo com dois atores externos (Aluno e Administrador) e com o banco de dados PostgreSQL. Os principais fluxos são: dados de cadastro e treino (Aluno \(\rightarrow\) Sistema), planos de treino montados (Personal \(\rightarrow\) Sistema \(\rightarrow\) Aluno), feedback e mensagens (Aluno \(\leftrightarrow\) Sistema \(\leftrightarrow\) Personal), operações de leitura/gravação junto ao banco de dados, e respostas da API para todos os atores.
 
 \subsection{DFD de Registro de Treino}
 \begin{enumerate}[label=\arabic*.]
@@ -412,16 +303,7 @@ O sistema RepMax é representado como um processo único, interagindo com três 
     \item A API retorna o treino registrado (TreinoResponseDTO), incluindo o 1RM estimado calculado.
 \end{enumerate}
 
-\subsection{DFD de Vínculo e Comunicação Personal-Aluno}
-\begin{enumerate}[label=\arabic*.]
-    \item O aluno solicita vínculo com um personal trainer.
-    \item O personal recebe e aceita (ou recusa) a solicitação.
-    \item O personal monta um plano de treino para o aluno vinculado.
-    \item O sistema notifica o aluno sobre o novo plano.
-    \item O aluno executa o treino e registra feedback.
-    \item O sistema notifica o personal sobre o feedback recebido.
-    \item Personal e aluno trocam mensagens via chat, persistidas no histórico de conversas.
-\end{enumerate}
+
 
 \section{Metodologia de Desenvolvimento}
 
@@ -488,12 +370,6 @@ Sprint 6 & Semana 11--12 & Versão 2: vínculo aluno-personal, montagem de plano
 \includegraphics[width=0.5\linewidth]{UMLs/UML_ROTINA_DE_TREINO.png}
 \end{figure}
 
-\subsection{Classe VinculoAlunoPersonal}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{UMLs/UML_VINCULO_ALUNO_PERSONAL.png}
-\end{figure}
-
 \subsection{Classe PlanoTreino}
 \begin{figure}[H]
 \centering
@@ -507,11 +383,7 @@ Sprint 6 & Semana 11--12 & Versão 2: vínculo aluno-personal, montagem de plano
 \end{figure}
 
 
-\subsection{Classe Mensagem}
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\linewidth]{UMLs/UML_MENSAGEM.png}
-\end{figure}
+
 
 \section{Relacionamentos e Cardinalidades}
 
@@ -535,8 +407,6 @@ Usuario & 1:N & VinculoAluno\newline Personal & Um aluno/personal pode ter vári
 VinculoAluno\newline Personal & 1:N & PlanoTreino & Um vínculo pode gerar vários planos de treino ao longo do tempo. \\
 \hline
 Treino & 1:1 & FeedbackTreino & Cada treino pode ter um feedback do aluno associado. \\
-\hline
-VinculoAluno\newline Personal & 1:N & Mensagem & Um vínculo concentra o histórico de mensagens trocadas. \\
 \bottomrule
 \end{longtable}
 
@@ -561,33 +431,21 @@ SERIE\_EXECUTADA & PK id, FK treino\_id, FK exercicio\_id & numero\_serie, repet
 \hline
 ROTINA\_TREINO & PK id, FK aluno\_id & nome \\
 \hline
-VINCULO\_ALUNO\_\newline PERSONAL & PK id, FK aluno\_id, FK personal\_id & status, data\_vinculo \\
-\hline
 PLANO\_TREINO & PK id, FK vinculo\_id & nome, data\_criacao \\
 \hline
 FEEDBACK\_TREINO & PK id, FK treino\_id & percepcao\_esforco, relato\_dor, observacoes \\
-\hline
-MENSAGEM & PK id, FK vinculo\_id, FK remetente\_id & conteudo, data\_hora, lida \\
 \bottomrule
 \end{longtable}
 \section{Casos de Uso}
 
 \subsection{Casos de Uso do Aluno}
-\textbf{UC01 --- Cadastrar-se e autenticar-se:} o aluno cria uma conta e realiza login (RF01, RF02).\\
+\textbf{UC01 --- Autenticar-se:} o aluno cria uma conta e realiza login (RF01, RF02).\\
 \textbf{UC02 --- Registrar treino:} o aluno registra exercícios, séries, repetições e cargas de uma sessão, podendo indicar técnicas de bi-set, tri-set, monster set ou drop set (RF04, RF09--RF12).\\
 \textbf{UC03 --- Consultar histórico e progressão:} o aluno visualiza seus treinos anteriores e a evolução de carga/volume por exercício (RF05, RF07).\\
 \textbf{UC04 --- Consultar instruções de execução:} o aluno visualiza como executar corretamente um exercício (RF13).\\
 \textbf{UC05 --- Criar rotina:} o aluno organiza exercícios em rotinas reutilizáveis (RF08).\\
-\textbf{UC06 --- Vincular-se a um personal trainer:} o aluno solicita vínculo a um personal (RFP02).\\
-\textbf{UC07 --- Visualizar plano de treino do personal:} o aluno consulta o treino montado pelo profissional (RFP04).\\
 \textbf{UC08 --- Registrar feedback:} o aluno relata esforço, dor ou observações após o treino (RFP05).\\
-\textbf{UC09 --- Conversar com o personal:} o aluno troca mensagens com o personal vinculado (RFP06).
 
-\subsection{Casos de Uso do Personal Trainer}
-\textbf{UC10 --- Aceitar vínculo de aluno:} o personal aceita ou recusa uma solicitação de vínculo (RFP02).\\
-\textbf{UC11 --- Montar plano de treino:} o personal cria um plano personalizado para um aluno vinculado (RFP03).\\
-\textbf{UC12 --- Editar plano de treino:} o personal ajusta um plano já existente (RFP09).\\
-\textbf{UC13 --- Acompanhar evolução dos alunos:} o personal consulta o histórico e os feedbacks de cada aluno vinculado (RFP08).
 
 \subsection{Casos de Uso do Administrador}
 \textbf{UC14 --- Gerenciar exercícios:} o administrador cadastra, atualiza ou remove exercícios do catálogo geral (RF03).\\
@@ -636,19 +494,9 @@ GET & /api/alunos/\{id\}/progresso/ \newline\{exercicioId\} & Retorna a evoluç�
 \hline
 POST & /api/rotinas & Cria uma rotina de treino. \\
 \hline
-POST & /api/vinculos & Solicita vínculo entre aluno e personal. \\
-\hline
-PUT & /api/vinculos/\{id\}/aceitar & Personal aceita um vínculo pendente. \\
-\hline
 DELETE & /api/vinculos/\{id\} & Encerra um vínculo entre aluno e personal. \\
 \hline
-POST & /api/planos-treino & Personal monta um plano de treino para o aluno. \\
-\hline
 POST & /api/treinos/\{id\}/feedback & Aluno registra feedback de um treino. \\
-\hline
-POST & /api/mensagens & Envia uma mensagem no chat aluno-personal. \\
-\hline
-GET & /api/vinculos/\{id\}/mensagens & Lista o histórico de mensagens de um vínculo. \\
 \bottomrule
 \end{longtable}
 \section{Regras de Negócio}
@@ -668,14 +516,7 @@ GET & /api/vinculos/\{id\}/mensagens & Lista o histórico de mensagens de um ví
 \begin{regra}
     Em cálculo de 1RM deve utilizar a fórmula de Epley e ser restrito a séries com até 10--12 repetições, faixa em que a fórmula mantém boa precisão.
 \end{regra}
-\subsection{Convite para Aluno}
-\begin{regra}
-     Um vínculo entre aluno e personal só é efetivado mediante aceite explícito do aluno após convite feito pelo personal.
-\end{regra}
-\subsection{Edição de plano de treino para aluno com personal:}
-\begin{regra}
-    Quando um aluno é vinculado a um personal, o plano de treino só pode ser criado ou editado pelo personal.
-\end{regra}
+
 \subsection{Um aluno não pode visualizar treinos e histórico de outro aluno}
 \begin{regra}
     Um aluno não pode acessar o histórico ou os planos de treino de outro aluno, salvo o personal, que acessa apenas os dados dos alunos a ele vinculados.
