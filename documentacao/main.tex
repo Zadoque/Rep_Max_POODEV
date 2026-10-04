@@ -60,8 +60,7 @@ O crescimento contínuo da prática de atividades físicas no Brasil, evidenciad
 dados da Sociedade Brasileira de Endocrinologia e Metabologia (SBEM)\footnote{SOCIEDADE BRASILEIRA DE ENDOCRINOLOGIA E METABOLOGIA (SBEM). \textit{Dados sobre a prática de atividade física no Brasil}. [link oficial e ano da pesquisa --- campo editável, a ser preenchido com a fonte efetivamente consultada].}, impulsiona a
 demanda por soluções digitais capazes de organizar e acompanhar a evolução de treinos de
 forma estruturada. Assim, o \textbf{RepMax} surge como uma plataforma web voltada ao registro
-de treinos de musculação, à visualização de progresso e à integração entre alunos e
-personal trainers, somando mais tecnologia ao meio fitness.
+de treinos de musculação, à visualização de progresso, somando mais tecnologia ao meio fitness.
 
 
 \subsection{Problema de Negócio}
@@ -73,11 +72,10 @@ Observam-se, entre praticantes de musculação, as seguintes dificuldades recorr
     \item Dificuldade de identificar se um exercício está em progressão, estagnação ou regressão de desempenho;
     \item Falta de suporte para técnicas de intensificação de treino (bi-set, tri-set, monster set e drop set), que hoje são anotadas de forma manual e pouco estruturada;
     \item Dúvidas frequentes sobre a execução correta de determinados exercícios, sem uma referência disponível no momento do treino;
-    \item Ausência de um canal integrado entre aluno e personal trainer, que hoje depende de aplicativos de mensagens externos (como WhatsApp) e planilhas avulsas.
 \end{itemize}
 
 \subsection{Proposta do Trabalho}
-Embora esse projeto tenha como objetivo principal resolver o problema de negócio e agragar valor para o cliente, há também o propósito de aprendizado de conceitos. Por isso, esse trabalho propõe o desenvolvimento de uma API RESTful para um sistema de log book de treino, denominado \textbf{RepMax}. E uma interface WEB usando: React + Typescript + Tailwind CSS + React Router (\textbf{Data Mode}) + Vite + fetch() para interagir com ela (Mais abaixo tem a justificativa para o uso de cada parte da interface). A solução tem como objetivo permitir que o usuário registre seus treinos de forma estruturada, acompanhe sua progressão por meio de indicadores, tais como: a repetição máxima estimada (1RM),  técnicas avançadas de intensidade e, em uma segunda versão do sistema, viabilize a atuação de um personal trainer na montagem de treinos e no acompanhamento de alunos.
+Embora esse projeto tenha como objetivo principal resolver o problema de negócio e agragar valor para o cliente, há também o propósito de aprendizado de conceitos. Por isso, esse trabalho propõe o desenvolvimento de uma API RESTful para um sistema de log book de treino, denominado \textbf{RepMax}. E uma interface WEB usando: React + Typescript + Tailwind CSS + React Router (\textbf{Data Mode}) + Vite + fetch() para interagir com ela (Mais abaixo tem a justificativa para o uso de cada parte da interface). A solução tem como objetivo permitir que o usuário registre seus treinos de forma estruturada, acompanhe sua progressão por meio de indicadores, tais como: a repetição máxima estimada (1RM) e  técnicas avançadas de intensidade.
 \newpage
 \section{StakeHolders}
 \paragraph{O Rep Max terá 5 visões diferentes sobre o sistema: Aluno sem Personal, Aluno com Personal, Personal sem Personal, Personal com personal e ADMIN}
@@ -85,7 +83,6 @@ Embora esse projeto tenha como objetivo principal resolver o problema de negóci
 Um aluno sem personal é um usuário cadastrado no sistema que não possui vínculo com um personal.
 Ele pode:
 \begin{itemize}
-    \item Se cadastrar no sistema com email e senha;
     \item Fazer login no sistema com email e senha;
     \item Trocar sua senha com código enviado por email;
     \item Criar uma nova rotina de treino;
