@@ -45,7 +45,7 @@ Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd 
 <br>
 
 <details>
-  <summary><strong>🧠 Por que usamos essa estratégia? (Explicação do Gemini)</strong></summary>
+  <summary><strong>🧠 Por que usamos essa estratégia?</strong></summary>
   <br>
   
   <table>
