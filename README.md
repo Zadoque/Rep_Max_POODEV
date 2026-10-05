@@ -34,7 +34,7 @@ O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (v
 Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd que define os requisitos e arquitetura do projeto com justificativas.
 
 # Fase 2: Desenvolvimento do Front-End com Dados Mocados
-```
+
 <br>
 
 <blockquote>
@@ -75,4 +75,4 @@ Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd 
     </tbody>
   </table>
 </details>
-```
+
