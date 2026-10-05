@@ -33,21 +33,46 @@ O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (v
 ## Documentação e Requisitos:
 Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd que define os requisitos e arquitetura do projeto com justificativas.
 
-# Fase 2: 
-## Desenvolvimento do front-end com dados mocados. 
-### Uma explicação do gemini para essa estratégia:
+# Fase 2: Desenvolvimento do Front-End com Dados Mocados
+```
+<br>
 
-```
-• Feedback Rápido (Fail Fast): O cliente ou os stakeholders conseguem interagir com uma interface realista logo nas primeiras Sprints. Se algo precisar mudar no design ou no fluxo, a alteração é feita rapidamente na camada visual.
-```
-```
-• Paralelismo de Equipes: Assim que a estrutura de dados (o contrato da API) é definida, a equipe de front-end pode construir as telas com mocks,
- enquanto a equipe de back-end desenvolve as APIs reais em paralelo. Ninguém fica esperando por ninguém.
-```
-```
-• Redução de Desperdício: Descobrir que uma funcionalidade não faz sentido depois que o banco de dados e as APIs já estão prontos gera um custo de refatoração altíssimo.
- Com o mock, o desperdício de código é mínimo.
-• Testabilidade Antecipada: Permite criar testes de interface (E2E) e de componentes desde o primeiro dia, garantindo que o comportamento visual esteja correto.
+<blockquote>
+  <strong>💡 O que é esta fase?</strong><br>
+  Construção das telas e componentes visuais utilizando dados fictícios (mocks) estruturados, simulando o comportamento real do sistema.
+</blockquote>
 
-```
+<br>
 
+<details>
+  <summary><strong>🧠 Por que usamos essa estratégia? (Explicação do Gemini)</strong></summary>
+  <br>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Benefício</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>⚡ Feedback Rápido (Fail Fast)</strong></td>
+        <td>O cliente ou os stakeholders conseguem interagir com uma interface realista logo nas primeiras Sprints. Se algo precisar mudar no design ou no fluxo, a alteração é feita rapidamente na camada visual.</td>
+      </tr>
+      <tr>
+        <td><strong>🔄 Paralelismo de Equipes</strong></td>
+        <td>Assim que a estrutura de dados (o contrato da API) é definida, a equipe de front-end pode construir as telas com mocks, enquanto a equipe de back-end desenvolve as APIs reais em paralelo. Ninguém fica esperando por ninguém.</td>
+      </tr>
+      <tr>
+        <td><strong>📉 Redução de Desperdício</strong></td>
+        <td>Descobrir que uma funcionalidade não faz sentido depois que o banco de dados e as APIs já estão prontos gera um custo de refatoração altíssimo. Com o mock, o desperdício de código é mínimo.</td>
+      </tr>
+      <tr>
+        <td><strong>🧪 Testabilidade Antecipada</strong></td>
+        <td>Permite criar testes de interface (E2E) e de componentes desde o primeiro dia, garantindo que o comportamento visual esteja correto.</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+```
