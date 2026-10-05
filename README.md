@@ -32,3 +32,16 @@ O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (v
 # Fase 1:
 ## Documentação e Requisitos:
 Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd que define os requisitos e arquitetura do projeto com justificativas.
+
+# Fase 2: 
+## Desenvolvimento do front-end com dados mocados. 
+### Uma explicação do gemini para essa estratégia:
+
+```
+• Feedback Rápido (Fail Fast): O cliente ou os stakeholders conseguem interagir com uma interface realista logo nas primeiras Sprints. Se algo precisar mudar no design ou no fluxo, a alteração é feita rapidamente na camada visual.
+• Paralelismo de Equipes: Assim que a estrutura de dados (o contrato da API) é definida, a equipe de front-end pode construir as telas com mocks, enquanto a equipe de back-end desenvolve as APIs reais em paralelo. Ninguém fica esperando por ninguém.
+• Redução de Desperdício: Descobrir que uma funcionalidade não faz sentido depois que o banco de dados e as APIs já estão prontos gera um custo de refatoração altíssimo. Com o mock, o desperdício de código é mínimo.
+• Testabilidade Antecipada: Permite criar testes de interface (E2E) e de componentes desde o primeiro dia, garantindo que o comportamento visual esteja correto.
+
+```
+
