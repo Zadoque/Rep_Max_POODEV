@@ -1,8 +1,7 @@
-import type UsuarioLogado from "../types/usuario-logado";
 import type CredenciaisLogin from "../types/autenticacao";
 import { usuariosMock } from "../mocks/usuarios-mock";
 import type { ResultadoAutenticacao } from "../types/autenticacao";
-export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<UsuarioLogado | ResultadoAutenticacao | null> {
+export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise< ResultadoAutenticacao> {
     if (import.meta.env.VITE_USE_MOCK === "true") {
         const usuario = usuariosMock.find(
             (usuario) =>
@@ -13,7 +12,7 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
         if (usuario) {
             if (!usuario.ativo) {
                 return {
-                    CodigoErroLogin: "CONTA_DESATIVADA",
+                    codigoErroLogin: "CONTA_DESATIVADA",
                     sucesso: false
                 };
             }
@@ -24,7 +23,7 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
             };
         } else {
             return {
-                CodigoErroLogin: "LOGIN_INVALIDO",
+                codigoErroLogin: "LOGIN_INVALIDO",
                 sucesso: false
             };
         }
@@ -33,8 +32,14 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
             //tenta pegar o usuário do backend
         } catch (error) {
             console.error("Erro na autenticação:", error);
-            return null;
+            return {
+                codigoErroLogin: "LOGIN_INVALIDO",
+                sucesso: false
+            };
         }
     }
-    return null;
+    return {
+        codigoErroLogin: "LOGIN_INVALIDO",
+        sucesso: false
+    };
 }
