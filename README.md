@@ -28,7 +28,18 @@ O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (v
 > [!WARNING]
 > Mesmo caso da IA, totalmente desencorado também pelo nosso querido professor. Embora tenhamos conseguido negociar o uso de Spring Boot para a API RESTfull, não chegamos a validar o uso de um framework para a interface WEB. Mas vamos marcar uma reunião com nosso AD Hoc e resolver essa pendência. Na documentação eu já vou colocar planejado e justificado, mas ainda vou passar pela régua do supervisor.
 
-
+# Padrão de Projeto usado no Front-end:
+## Para componentes React:
+  PacalCase
+  ### Exemplos:
+  LoginPage.tsx
+  RoutineCard.tsx
+## Para arquivos .ts:
+  kebab-case
+  ### Exemplos:
+  credenciais-login.ts
+  auth-service.ts
+  usuarios-mock.ts
 # Fase 1:
 ## Documentação e Requisitos:
 Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd que define os requisitos e arquitetura do projeto com justificativas.
