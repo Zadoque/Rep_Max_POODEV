@@ -1,4 +1,4 @@
-import type { UsuarioLogado } from "../types/usuario-logado";
+import type UsuarioLogado  from "../types/usuario-logado";
 
 export interface UsuarioMock extends UsuarioLogado {
     ativo: boolean;
