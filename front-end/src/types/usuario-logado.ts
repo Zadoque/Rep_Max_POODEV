@@ -1,6 +1,6 @@
 export type Perfil = "ALUNO" | "ADMIN" 
 
-export interface UsuarioLogado {
+export default interface UsuarioLogado {
     id: number;
     nome: string;
     email: string;
