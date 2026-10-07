@@ -5,9 +5,15 @@ export default interface CredenciaisLogin {
     senha: string;
 }
 export type CodigoErroLogin = "LOGIN_INVALIDO" | "CONTA_DESATIVADA"
-export interface ResultadoAutenticacao {
-    CodigoErroLogin?: CodigoErroLogin;
-    usuarioLogado?: UsuarioLogado;
-    sucesso: boolean;
-}
+
+export type ResultadoAutenticacao = |
+     {
+        sucesso: true
+        usuarioLogado: UsuarioLogado
+      }
+    | {
+        sucesso: false
+        codigoErroLogin: CodigoErroLogin
+      }
+
   
