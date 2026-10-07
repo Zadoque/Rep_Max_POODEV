@@ -1,0 +1,1 @@
+Esse arquivo vai em todas as pastas vazias da estrutura apenas para poder subir a estrutura para o github
