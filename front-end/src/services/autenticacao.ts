@@ -16,7 +16,12 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
                     sucesso: false
                 };
             }
-            const { senha, ativo, ...usuarioLogado } = usuario;
+            const usuarioLogado = {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                tipo: usuario.tipo
+            };
             return {
                 usuarioLogado,
                 sucesso: true
@@ -29,7 +34,7 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
         }
     } else {
         try {
-            //tenta pegar o usuário do backend
+           //fetch real para autenticação
         } catch (error) {
             console.error("Erro na autenticação:", error);
             return {

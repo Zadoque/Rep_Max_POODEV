@@ -17,7 +17,7 @@ export const usuariosMock: UsuarioMock[] = [
     {
         id: 2,
         nome: "Maria Souza",
-        email: "maria.souza@example.com",
+        email: "usuario@gmail.com",
         tipo: "ALUNO",
         ativo: false,
         senha: "123456"
@@ -27,6 +27,14 @@ export const usuariosMock: UsuarioMock[] = [
         nome: "Carlos Oliveira",
         email: "carlos.oliveira@example.com",
         tipo: "ALUNO",
+        ativo: true,
+        senha: "123456"
+    },
+    {
+        id: 4,
+        nome: "Natalia Santos",
+        email: "natalia@example.com",
+        tipo: "ADMIN",
         ativo: true,
         senha: "123456"
     }
