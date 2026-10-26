@@ -4,7 +4,6 @@ import com.example.rep_max.DTO.request.UsuarioRequest;
 import com.example.rep_max.DTO.response.UsuarioResponse;
 import com.example.rep_max.service.UsuarioService;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +17,13 @@ public class AuthController {
 
     private final UsuarioService usuarioService;
 
-    @GetMapping
+    @GetMapping("/csrf")
     public CsrfToken csrf(CsrfToken csrfToken) {
         return  csrfToken;
     }
 
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UsuarioResponse> register(@Valid @RequestBody UsuarioRequest request) {
         UsuarioResponse usuarioResponse = usuarioService.saveUsuario(request);
 
@@ -32,7 +31,5 @@ public class AuthController {
                 .body(usuarioResponse);
 
     }
-
-
 
 }
