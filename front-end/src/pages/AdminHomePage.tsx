@@ -1,8 +1,11 @@
 import { useAutenticacao } from '../hooks/use-autenticacao'
+import { useNavigate } from 'react-router'
 
 export default function AdminHomePage() {
  
- const { usuario } = useAutenticacao()
+ const { usuario, sair } = useAutenticacao()
+ const navigate = useNavigate()
+
     if (!usuario || usuario.tipo !== "ADMIN") {
         return (
             <div>
@@ -15,7 +18,15 @@ export default function AdminHomePage() {
         <div>
             <div>
                 <div>REP º MAX</div>
-                <div>Seja bém-vindo, {usuario.nome}! Você é um administrador.</div>
+                <div>
+                    <span>Seja bem-vindo, {usuario.nome}! Você é um administrador.</span>
+                    <button type="button" onClick={() => {
+                        sair()
+                        navigate("/login")
+                    }}>
+                        Sair
+                    </button>
+                </div>
             </div>
         </div>
     )
