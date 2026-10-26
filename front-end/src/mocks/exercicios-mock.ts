@@ -49,7 +49,9 @@ export const exerciciosMock: ExercicioCatalogo[] = exerciciosMaisComuns.map((slu
         descricao: `Exercício de ${gruposMusculares[exercicio.primaryMuscle] ?? exercicio.primaryMuscle.toLowerCase()} para compor seu treino.`,
         instrucoesExecucao: "Execute com controle, mantenha a postura indicada e respeite sua amplitude segura.",
         midia: {
-            frames: [1, 2, 3].map((frame) => `/exercises/${slug}/frame-${frame}.png`) as [string, string, string],
+            animacao: `/exercises/${slug}/animation.gif`,
+            animacaoLenta: `/exercises/${slug}/animation-slow.gif`,
+            animacaoRapida: `/exercises/${slug}/animation-fast.gif`,
             creditos: "Workout Guide / Bryl Lim; poses originais Everkinetic",
             licenca: "CC BY-SA 4.0",
         },

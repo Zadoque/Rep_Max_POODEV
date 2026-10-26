@@ -7,7 +7,9 @@ export interface ExercicioCatalogo {
     descricao: string
     instrucoesExecucao: string
     midia: {
-        frames: [string, string, string]
+        animacao: string
+        animacaoLenta: string
+        animacaoRapida: string
         creditos: string
         licenca: string
     }
