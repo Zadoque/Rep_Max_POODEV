@@ -1,6 +1,7 @@
 import type ResumoHomeAluno from "../types/resumo-home-aluno"
 
-export const resumoHomeAlunoMock: ResumoHomeAluno = {
+export const resumosHomeAlunoMock: Record<number, ResumoHomeAluno> = {
+  1: {
     treinoAtual: {
         id: 101,
         status: "PAUSADO",
@@ -17,4 +18,24 @@ export const resumoHomeAlunoMock: ResumoHomeAluno = {
         data: "2026-10-12T20:05:00",
         nomeRotina: "Treino B — Costas e bíceps",
     },
+  },
+  3: {
+    treinoAtual: {
+        id: 201,
+        status: "NAO_INICIADO",
+        inicio: "2026-10-26T18:00:00",
+        nomeRotina: "Treino C — Pernas",
+    },
+    rotinasAtivas: [
+        { id: 4, nome: "Treino C — Pernas", quantidadeExercicios: 7 },
+        { id: 5, nome: "Treino D — Ombros e abdômen", quantidadeExercicios: 4 },
+    ],
+    ultimoTreino: {
+        id: 202,
+        data: "2026-10-23T19:30:00",
+        nomeRotina: "Treino B — Costas e bíceps",
+    },
+  },
 }
+
+export const resumoHomeAlunoMock = resumosHomeAlunoMock[1]

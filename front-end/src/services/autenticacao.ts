@@ -23,6 +23,7 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
                 email: usuario.email,
                 tipo: usuario.tipo,
                 ativo: usuario.ativo,
+                preferenciaTema: usuario.preferenciaTema,
             };
             return {
                 usuarioLogado,

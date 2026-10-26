@@ -12,6 +12,7 @@ export const usuariosMock: UsuarioMock[] = [
         email: "joao.silva@example.com",
         tipo: "ALUNO",
         ativo: true,
+        preferenciaTema: "CLARO",
         senha: "123456"
     },
     {
@@ -20,6 +21,7 @@ export const usuariosMock: UsuarioMock[] = [
         email: "usuario@gmail.com",
         tipo: "ALUNO",
         ativo: false,
+        preferenciaTema: "CLARO",
         senha: "123456"
     },
     {
@@ -28,6 +30,7 @@ export const usuariosMock: UsuarioMock[] = [
         email: "carlos.oliveira@example.com",
         tipo: "ALUNO",
         ativo: true,
+        preferenciaTema: "ESCURO",
         senha: "123456"
     },
     {
@@ -36,6 +39,7 @@ export const usuariosMock: UsuarioMock[] = [
         email: "natalia@example.com",
         tipo: "ADMIN",
         ativo: true,
+        preferenciaTema: "CLARO",
         senha: "123456"
     }
 ];

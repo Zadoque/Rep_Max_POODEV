@@ -58,4 +58,42 @@ export const treinosMock: TreinoResumo[] = [
         nomeRotina: "Treino A — Peito e tríceps",
         exercicios: [],
     },
+    {
+        id: 201,
+        alunoId: 3,
+        status: "NAO_INICIADO",
+        inicio: "2026-10-26T18:00:00",
+        fim: null,
+        nomeRotina: "Treino C — Pernas",
+        exercicios: [
+            {
+                id: 10,
+                nome: "Agachamento livre",
+                grupoMuscular: "Quadríceps",
+                series: [
+                    { numero: 1, repeticoes: 12, cargaKg: 40, concluida: false, tipoTecnica: "NORMAL" },
+                    { numero: 2, repeticoes: 10, cargaKg: 45, concluida: false, tipoTecnica: "NORMAL" },
+                    { numero: 3, repeticoes: 8, cargaKg: 50, concluida: false, tipoTecnica: "NORMAL" },
+                ],
+            },
+            {
+                id: 11,
+                nome: "Leg press",
+                grupoMuscular: "Pernas",
+                series: [
+                    { numero: 1, repeticoes: 12, cargaKg: 100, concluida: false, tipoTecnica: "NORMAL" },
+                    { numero: 2, repeticoes: 10, cargaKg: 110, concluida: false, tipoTecnica: "NORMAL" },
+                ],
+            },
+        ],
+    },
+    {
+        id: 202,
+        alunoId: 3,
+        status: "FINALIZADO",
+        inicio: "2026-10-23T18:40:00",
+        fim: "2026-10-23T19:30:00",
+        nomeRotina: "Treino B — Costas e bíceps",
+        exercicios: [],
+    },
 ]

@@ -1,4 +1,5 @@
 export type Perfil = "ALUNO" | "ADMIN" 
+export type PreferenciaTema = "CLARO" | "ESCURO"
 
 export default interface UsuarioLogado {
     id: number;
@@ -6,4 +7,5 @@ export default interface UsuarioLogado {
     email: string;
     tipo: Perfil;
     ativo: boolean;
+    preferenciaTema: PreferenciaTema;
 }
