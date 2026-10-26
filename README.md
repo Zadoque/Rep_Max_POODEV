@@ -85,5 +85,36 @@ Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd 
       </tr>
     </tbody>
   </table>
-</details>
+  </details>
 
+## Front-end atual
+
+O front-end agora possui uma área autenticada mobile-first para alunos, construída com React, Vite e Tailwind CSS.
+
+### Autenticação e sessão
+
+- Login com usuários mockados e contas ativas/inativas;
+- persistência da sessão com `sessionStorage`;
+- logout nas áreas de aluno e administrador;
+- proteção de rotas para aluno, administrador e conta desativada;
+- preferência de tema claro/escuro persistida globalmente no `localStorage`;
+- alteração da preferência preparada em um serviço mockado com o caminho `PATCH /api/usuarios/{id}/preferencia-tema`.
+
+### Área do aluno
+
+A área `/app` possui quatro abas:
+
+- **Início:** próximo treino ou treino pausado para continuar;
+- **Treinos:** rotinas salvas do usuário;
+- **Histórico:** gráfico mockado de evolução e treinos realizados;
+- **Perfil:** e-mail, foto, peso, altura, notificações e preferência de tema.
+
+A navegação é mobile-first: fica fixa na parte inferior em telas pequenas e passa para o topo em telas médias e grandes. Os dados variam de acordo com o usuário mockado, incluindo cenários diferentes para João e Carlos.
+
+### Tema e responsividade
+
+O tema claro usa fundo branco-gelo, texto escuro e verde claro. O tema escuro usa fundo quase preto, texto claro e verde escuro. A tela de login ocupa a altura total da viewport, com o painel da logo e o formulário dividindo o espaço sem scroll externo.
+
+### Inspiração da tela de login
+
+A composição da tela de login foi inspirada no projeto [Login-Project](https://github.com/Zadoque/Login-Project), criado durante minha formação como aluno da [Refatorando](https://refatorando.com.br/). A versão do Rep Max adapta a ideia visual para React e Tailwind CSS, usando a logo do Rep Max como background animado no painel esquerdo.
