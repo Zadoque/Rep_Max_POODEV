@@ -1,6 +1,7 @@
 import type CredenciaisLogin from "../types/autenticacao";
 import { usuariosMock } from "../mocks/usuarios-mock";
 import type { ResultadoAutenticacao } from "../types/autenticacao";
+import type UsuarioLogado from "../types/usuario-logado";
 export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise< ResultadoAutenticacao> {
     if (import.meta.env.VITE_USE_MOCK === "true") {
         const usuario = usuariosMock.find(
@@ -16,11 +17,12 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
                     sucesso: false
                 };
             }
-            const usuarioLogado = {
+            const usuarioLogado: UsuarioLogado = {
                 id: usuario.id,
                 nome: usuario.nome,
                 email: usuario.email,
-                tipo: usuario.tipo
+                tipo: usuario.tipo,
+                ativo: usuario.ativo,
             };
             return {
                 usuarioLogado,

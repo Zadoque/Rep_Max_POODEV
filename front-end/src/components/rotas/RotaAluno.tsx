@@ -6,6 +6,11 @@ export default function RotaAluno() {
     if (!usuario) {
       return <Navigate to="/login" replace />
     } 
+
+    if (!usuario.ativo) {
+      return <Navigate to="/desativado" replace />
+    }
+
     if (usuario.tipo === "ADMIN") {
       return <Navigate to="/admin" replace />
     }
