@@ -6,22 +6,46 @@ export const rotinasDashboardMock: RotinaDashboard[] = [
         id: 1,
         nome: "Treino A — Peito e tríceps",
         descricao: "Foco em força e volume para membros superiores.",
-        quantidadeExercicios: 6,
+        exercicios: [
+            { exercicioId: 1, quantidadeSeries: 4 },
+            { exercicioId: 2, quantidadeSeries: 3 },
+            { exercicioId: 6, quantidadeSeries: 3 },
+            { exercicioId: 9, quantidadeSeries: 3 },
+            { exercicioId: 26, quantidadeSeries: 3 },
+            { exercicioId: 27, quantidadeSeries: 3 },
+        ],
         ultimaExecucao: "2026-10-12T20:05:00",
+        atualizadoEm: "2026-10-12T20:05:00",
     },
     {
         id: 2,
         nome: "Treino B — Costas e bíceps",
         descricao: "Puxadas, remadas e exercícios complementares.",
-        quantidadeExercicios: 5,
+        exercicios: [
+            { exercicioId: 10, quantidadeSeries: 4 },
+            { exercicioId: 12, quantidadeSeries: 3 },
+            { exercicioId: 13, quantidadeSeries: 3 },
+            { exercicioId: 14, quantidadeSeries: 3 },
+            { exercicioId: 21, quantidadeSeries: 3 },
+        ],
         ultimaExecucao: "2026-10-09T19:20:00",
+        atualizadoEm: "2026-10-09T19:20:00",
     },
     {
         id: 3,
         nome: "Treino C — Pernas",
         descricao: "Rotina completa para quadríceps, posteriores e glúteos.",
-        quantidadeExercicios: 7,
+        exercicios: [
+            { exercicioId: 36, quantidadeSeries: 4 },
+            { exercicioId: 37, quantidadeSeries: 4 },
+            { exercicioId: 38, quantidadeSeries: 3 },
+            { exercicioId: 39, quantidadeSeries: 3 },
+            { exercicioId: 40, quantidadeSeries: 3 },
+            { exercicioId: 41, quantidadeSeries: 3 },
+            { exercicioId: 42, quantidadeSeries: 3 },
+        ],
         ultimaExecucao: null,
+        atualizadoEm: "2026-10-01T12:00:00",
     },
 ]
 
@@ -53,8 +77,8 @@ export const perfilDashboardMock: PerfilDashboard = {
 export const rotinasDashboardMocksPorUsuario: Record<number, RotinaDashboard[]> = {
     1: rotinasDashboardMock,
     3: [
-        { id: 4, nome: "Treino C — Pernas", descricao: "Rotina completa para quadríceps, posteriores e glúteos.", quantidadeExercicios: 7, ultimaExecucao: "2026-10-23T19:30:00" },
-        { id: 5, nome: "Treino D — Ombros e abdômen", descricao: "Foco em estabilidade, ombros e fortalecimento do core.", quantidadeExercicios: 4, ultimaExecucao: null },
+        { id: 4, nome: "Treino C — Pernas", descricao: "Rotina completa para quadríceps, posteriores e glúteos.", exercicios: [{ exercicioId: 36, quantidadeSeries: 4 }, { exercicioId: 39, quantidadeSeries: 4 }, { exercicioId: 42, quantidadeSeries: 3 }], ultimaExecucao: "2026-10-23T19:30:00", atualizadoEm: "2026-10-23T19:30:00" },
+        { id: 5, nome: "Treino D — Ombros e abdômen", descricao: "Foco em estabilidade, ombros e fortalecimento do core.", exercicios: [{ exercicioId: 30, quantidadeSeries: 3 }, { exercicioId: 32, quantidadeSeries: 3 }, { exercicioId: 49, quantidadeSeries: 3 }], ultimaExecucao: null, atualizadoEm: "2026-10-03T08:00:00" },
     ],
 }
 

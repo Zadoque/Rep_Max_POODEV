@@ -2,9 +2,17 @@ export interface RotinaDashboard {
     id: number
     nome: string
     descricao: string
-    quantidadeExercicios: number
+    exercicios: ExercicioRotina[]
     ultimaExecucao: string | null
+    atualizadoEm: string
 }
+
+export interface ExercicioRotina {
+    exercicioId: number
+    quantidadeSeries: number
+}
+
+export type RotinaDashboardInput = Pick<RotinaDashboard, "nome" | "descricao" | "exercicios">
 
 export interface PontoEvolucao {
     label: string
