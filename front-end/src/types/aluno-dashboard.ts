@@ -11,6 +11,35 @@ export interface PontoEvolucao {
     valor: number
 }
 
+export type TipoMetricaHistorico = "volume" | "oneRepMax" | "carga" | "seriesRepeticoes"
+
+export interface SerieMetricaHistorico {
+    id: TipoMetricaHistorico
+    titulo: string
+    descricao: string
+    unidade: string
+    pontos: PontoEvolucao[]
+    variacao: number
+}
+
+export interface MetricaExercicioHistorico {
+    exercicioId: number
+    carga: SerieMetricaHistorico
+    oneRepMax: SerieMetricaHistorico
+}
+
+export interface HistoricoAluno {
+    metricas: SerieMetricaHistorico[]
+    metricasPorExercicio: MetricaExercicioHistorico[]
+    treinos: Array<{
+        id: number
+        rotina: string
+        data: string
+        duracao: string
+        status: string
+    }>
+}
+
 export interface PerfilDashboard {
     email: string
     fotoUrl: string | null
