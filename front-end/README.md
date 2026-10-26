@@ -1,75 +1,23 @@
-# React + TypeScript + Vite
+# Rep Max — Front-end
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface React, TypeScript, Vite e Tailwind CSS do Rep Max. A aplicação está em desenvolvimento com dados mockados, mas os serviços já separam a origem dos dados para a futura integração com a API.
 
-Currently, two official plugins are available:
+## Desenvolvimento
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Para validar o projeto:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run build
+npm run lint
 ```
+
+## Mocks e integração futura
+
+O arquivo `.env.development` usa `VITE_USE_MOCK=true`. Os serviços de autenticação, preferências, dashboard, exercícios e histórico verificam essa variável. Os dados de exercício seguem o modelo do back-end (`id`, nome, grupo muscular, instruções e mídia) e o histórico associa as métricas ao exercício.
+
+O catálogo local contém 50 exercícios e 150 frames PNG, armazenados em `public/exercises/`. A animação alterna três frames por exercício. Os assets vêm do [Workout Guide](https://github.com/avidevper/workout-guide-svgs), com licença CC BY-SA 4.0 e atribuição preservada nos arquivos `ATTRIBUTION-workout-guide.md` e `LICENSES-workout-guide.md`.

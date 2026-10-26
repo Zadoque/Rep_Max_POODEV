@@ -152,6 +152,10 @@ Cada parte da interface tem seu propósito:
 
 Esse conjunto permite que tenhamos um equilíbrio entre conceitos a aprender e aplicar e prazo de entrega. 
 
+Na implementação inicial do front-end, as consultas são fabricadas por serviços que alternam entre mocks e a futura API por meio da variável \texttt{VITE\_USE\_MOCK}. O catálogo mockado contém 50 exercícios, seguindo a entidade \texttt{Exercicio} do back-end, e cada exercício é associado às métricas de carga e 1RM pelo seu identificador. O histórico é exibido por mês; volume total e séries/repetições são agregados, enquanto carga e 1RM exigem a seleção do exercício.
+
+Para a demonstração de execução, o front-end mantém localmente três frames PNG por exercício e os alterna para formar uma animação leve. Os assets foram obtidos do projeto Workout Guide, que disponibiliza ilustrações de exercícios sob CC BY-SA 4.0. A atribuição é mantida no diretório \texttt{front-end/public/exercises/}. Essa decisão é exclusiva do mock: futuramente os arquivos poderão ser carregados sob demanda, conforme o exercício utilizado pelo aluno.
+
 \subsection{Bloco: Treino Individual}
 
 Concentra as funcionalidades de uso autônomo do aluno: cadastro de exercícios, registro de séries (incluindo as técnicas de intensidade), cálculo de 1RM, histórico e rotinas.
@@ -243,17 +247,17 @@ Dificuldade de aprendizado de tecnologias novas (WebSocket, Docker) & Médio & A
 \endhead
 RF01 & Permitir o cadastro de um novo usuário. & Alta & Não implementado \\
 RF02 & Permitir que o usuário realize login por e-mail e senha. & Alta & Não implementado \\
-RF03 & Permitir o CRUD de exercícios (nome, grupo muscular, descrição). & Alta & Não implementado \\
+RF03 & Permitir o CRUD de exercícios (nome, grupo muscular, descrição). & Alta & Catálogo mockado no front-end \\
 RF04 & Permitir o registro de uma sessão de treino, com data, exercícios, séries, repetições e carga. & Alta & Não implementado \\
-RF05 & Permitir a consulta do histórico de treinos do usuário. & Alta & Não implementado \\
-RF06 & Calcular automaticamente a repetição máxima estimada (1RM), a partir de carga e repetições, usando a fórmula de referência de Epley. & Média & Não implementado \\
-RF07 & Exibir a evolução de carga e volume de um exercício ao longo do tempo. & Média & Não implementado \\
+RF05 & Permitir a consulta do histórico de treinos do usuário. & Alta & Histórico mockado no front-end \\
+RF06 & Calcular automaticamente a repetição máxima estimada (1RM), a partir de carga e repetições, usando a fórmula de referência de Epley. & Média & Dados mockados; cálculo na API \\
+RF07 & Exibir a evolução de carga e volume de um exercício ao longo do tempo. & Média & Métricas mensais mockadas por exercício \\
 RF08 & Permitir a criação de rotinas de treino reutilizáveis (ex.: Treino A, B, C). & Média & Não implementado \\
 RF09 & Permitir o registro de séries em \textbf{bi-set} (dois exercícios em sequência, sem descanso). & Média & Não implementado \\
 RF10 & Permitir o registro de séries em \textbf{tri-set} (três exercícios em sequência, sem descanso). & Média & Não implementado \\
 RF11 & Permitir o registro de séries em \textbf{monster set} (quatro ou mais exercícios em sequência, sem descanso). & Média & Não implementado \\
 RF12 & Permitir o registro de séries em \textbf{drop set} (redução progressiva de carga no mesmo exercício, sem descanso). & Média & Não implementado \\
-RF13 & Exibir, para cada exercício, uma demonstração de execução correta (texto, imagem ou vídeo). & Alta & Não implementado \\
+RF13 & Exibir, para cada exercício, uma demonstração de execução correta (texto, imagem ou vídeo). & Alta & Texto e animação mockada por frames \\
 RF14 & Permitir a edição e exclusão de treinos e exercícios cadastrados. & Alta & Não implementado \\
 RF15 & Permitir a filtragem do histórico por período, exercício ou grupo muscular. & Média & Não implementado \\
 \bottomrule
@@ -542,7 +546,7 @@ POST & /api/treinos/\{id\}/feedback & Aluno registra feedback de um treino. \\
 
 O sistema RepMax, apresentado ao longo desta documentação, propõe uma solução estruturada para o registro e acompanhamento de treinos de musculação, contemplando desde funcionalidades básicas de um log book até técnicas avançadas de intensidade (bi-set, tri-set, monster set e drop set) e um modelo colaborativo entre aluno e personal trainer. O projeto foi concebido de forma incremental, iniciando em um escopo simples e evoluindo em fases, o que permite consolidar conceitos de Java, Spring Boot e persistência com JPA/PostgreSQL ao longo do desenvolvimento.
 
-Reforça-se que, no momento desta entrega, nenhuma das funcionalidades apresentadas foi implementada: este documento reflete integralmente a fase de análise e especificação do projeto, servindo de base para as etapas subsequentes de implementação.
+Como primeira entrega de implementação, o front-end já possui autenticação mockada, área mobile-first do aluno, histórico mensal, métricas por exercício, catálogo local com 50 exercícios e demonstrações animadas por frames. A API e a persistência do catálogo, dos treinos e das métricas continuam sendo etapas futuras; por isso, os serviços mantêm contratos e caminhos de endpoint preparados para a substituição dos mocks.
 
 \section{Referências}
 
@@ -555,6 +559,7 @@ Reforça-se que, no momento desta entrega, nenhuma das funcionalidades apresenta
     \item THE POSTGRESQL GLOBAL DEVELOPMENT GROUP. \textit{PostgreSQL Documentation}. [link oficial --- campo editável].
     \item OBJECT MANAGEMENT GROUP (OMG). \textit{Unified Modeling Language (UML) Specification}. [versão e link --- campo editável].
     \item EPLEY, B. \textit{Poundage Chart}. Boyd Epley Workout, 1985. [referência da fórmula de 1RM --- campo editável].
+    \item BRYL LIM. \textit{Workout Guide}. Ilustrações de exercícios sob licença CC BY-SA 4.0. Disponível em: \url{https://github.com/avidevper/workout-guide-svgs}. Acesso em: 26 out. 2026.
     \item PRESSMAN, R. S.; MAXIM, B. R. \textit{Engenharia de Software: uma abordagem profissional}. [edição e ano --- campo editável].
 \end{itemize}
 

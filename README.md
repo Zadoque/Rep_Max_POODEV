@@ -106,8 +106,16 @@ A área `/app` possui quatro abas:
 
 - **Início:** próximo treino ou treino pausado para continuar;
 - **Treinos:** rotinas salvas do usuário;
-- **Histórico:** gráfico mockado de evolução e treinos realizados;
+- **Histórico:** métricas mensais de volume total, 1RM estimado e séries/repetições; evolução de carga e 1RM selecionável por exercício; histórico de treinos realizados;
 - **Perfil:** e-mail, foto, peso, altura, notificações e preferência de tema.
+
+### Catálogo de exercícios e histórico
+
+O front-end possui um catálogo mockado com 50 exercícios comuns de academia. Cada exercício segue o modelo previsto no back-end, com identificador, nome, grupo muscular, equipamento, descrição, instruções e mídia. As métricas de carga e 1RM são vinculadas ao `exercicioId` e apresentam a evolução organizada por mês.
+
+As consultas são isoladas em serviços (`buscarExercicios` e `buscarHistoricoAluno`) e condicionadas por `VITE_USE_MOCK`. Assim, a troca para `false` mantém o contrato pronto para os endpoints da API, atualmente documentados como `GET /api/exercicios` e `GET /api/alunos/{id}/progresso/{exercicioId}`.
+
+As demonstrações dos exercícios são animações locais feitas pela alternância de três frames PNG. Os 150 frames foram obtidos do pacote [Workout Guide](https://github.com/avidevper/workout-guide-svgs), sob licença CC BY-SA 4.0, com os arquivos de atribuição mantidos em `front-end/public/exercises/`. O pacote fornece ilustrações animadas em frames, não vídeos MP4; a implementação deixa a mídia preparada para uma futura estratégia de carregamento sob demanda.
 
 A navegação é mobile-first: fica fixa na parte inferior em telas pequenas e passa para o topo em telas médias e grandes. Os dados variam de acordo com o usuário mockado, incluindo cenários diferentes para João e Carlos.
 
