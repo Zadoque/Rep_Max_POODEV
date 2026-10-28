@@ -28,18 +28,109 @@ O Projeto é feito pela dupla de alunos: Zadoque Pires de Deus Souza Carneiro (v
 > [!WARNING]
 > Mesmo caso da IA, totalmente desencorado também pelo nosso querido professor. Embora tenhamos conseguido negociar o uso de Spring Boot para a API RESTfull, não chegamos a validar o uso de um framework para a interface WEB. Mas vamos marcar uma reunião com nosso AD Hoc e resolver essa pendência. Na documentação eu já vou colocar planejado e justificado, mas ainda vou passar pela régua do supervisor.
 
-# Padrão de Projeto usado no Front-end:
-## Para componentes React:
-  PacalCase
-  ### Exemplos:
-  LoginPage.tsx
-  RoutineCard.tsx
-## Para arquivos .ts:
-  kebab-case
-  ### Exemplos:
-  credenciais-login.ts
-  auth-service.ts
-  usuarios-mock.ts
+# Convenções e organização do Front-end
+
+O front-end segue convenções de nomenclatura e uma organização por responsabilidade. A ideia é tornar os arquivos fáceis de localizar, importar e reutilizar, mantendo uma leitura consistente em todo o projeto.
+
+## Componentes React
+
+Componentes React utilizam **PascalCase**, tanto no nome do arquivo quanto no nome da função ou classe exportada. O nome deve representar claramente a responsabilidade do componente.
+
+| Responsabilidade | Exemplo no projeto |
+| --- | --- |
+| Página | `src/pages/LoginPage.tsx`, `src/pages/AlunoHomePage.tsx` |
+| Componente de navegação | `src/components/navegacao/NavegacaoPrincipal.tsx` |
+| Componente de rota | `src/components/rotas/RotaAluno.tsx` |
+| Componente de aba | `src/components/abas/HistoricoTab.tsx`, `src/components/abas/TreinosTab.tsx` |
+| Componente visual reutilizável | `src/components/exercicios/ExercicioAnimacao.tsx` |
+
+Exemplo:
+
+```tsx
+export default function ExercicioAnimacao({ exercicio }: Props) {
+  // comportamento visual da animação do exercício
+}
+```
+
+## Arquivos TypeScript
+
+Arquivos `.ts` que não são componentes utilizam **kebab-case**. Essa convenção é aplicada a serviços, tipos, hooks, contextos, mocks e utilitários.
+
+| Tipo de arquivo | Exemplos no projeto |
+| --- | --- |
+| Serviço | `src/services/aluno-dashboard.ts`, `src/services/preferencias-usuario.ts` |
+| Tipos | `src/types/usuario-logado.ts`, `src/types/aluno-dashboard.ts` |
+| Hook | `src/hooks/use-autenticacao.ts`, `src/hooks/use-tema.ts` |
+| Contexto | `src/contexts/autenticacao-context.ts` |
+| Mock | `src/mocks/usuarios-mock.ts`, `src/mocks/exercicios-mock.ts` |
+| Utilitário | `src/utils/normalizar-email.ts`, `src/utils/validacao-email.ts` |
+
+Exemplo de serviço separado da interface:
+
+```ts
+export async function buscarExercicios(): Promise<ExercicioCatalogo[]> {
+  if (import.meta.env.VITE_USE_MOCK === "true") {
+    return exerciciosMock
+  }
+
+  // Integração futura com GET /api/exercicios
+}
+```
+
+## Organização por responsabilidade
+
+As pastas refletem o papel de cada parte da aplicação:
+
+```text
+src/
+├── components/   # componentes visuais e de navegação
+├── contexts/     # estado compartilhado, como autenticação
+├── hooks/        # lógica reutilizável entre componentes
+├── mocks/        # dados fictícios para desenvolvimento
+├── pages/        # páginas acessadas pelas rotas
+├── services/     # comunicação e regras de acesso aos dados
+├── types/        # contratos TypeScript
+└── utils/        # funções auxiliares
+```
+
+Por exemplo, `LoginPage.tsx` coleta as credenciais e delega a autenticação para `services/autenticacao.ts`. O resultado é armazenado pelo `AutenticacaoProvider`, enquanto `RotaAluno.tsx` usa esse estado para proteger a área `/app`. Dessa forma, a página, o estado global e a regra de navegação permanecem separados.
+
+# Padrão de Commits
+
+O projeto utiliza o padrão **Conventional Commits** para manter o histórico do Git organizado, previsível e fácil de consultar. Cada mensagem deve informar de forma breve qual tipo de mudança foi realizada e, opcionalmente, a área afetada:
+
+```text
+tipo(escopo): descrição curta no imperativo
+```
+
+## Tipos utilizados
+
+| Tipo | Quando utilizar | Exemplo no projeto |
+| --- | --- | --- |
+| `feat` | Adição de uma funcionalidade | `feat(frontend): add exercise animation controls` |
+| `fix` | Correção de um comportamento incorreto | `fix(auth): normalize login emails` |
+| `docs` | Alteração exclusiva de documentação | `docs(readme): document frontend flows and entities` |
+| `refactor` | Reorganização sem mudar o comportamento | `refactor(services): isolate dashboard data access` |
+| `test` | Criação ou alteração de testes | `test(auth): cover inactive account login` |
+| `chore` | Manutenção, configuração ou dependências | `chore(frontend): update build configuration` |
+
+## Regras práticas
+
+- Escrever a descrição em inglês e no imperativo: `add`, `fix`, `document`, `update`;
+- Manter a primeira linha curta e objetiva;
+- Usar escopo quando ele ajudar a identificar a área alterada, como `frontend`, `auth`, `readme` ou `services`;
+- Não misturar funcionalidades diferentes no mesmo commit;
+- Usar o corpo do commit somente quando for necessário explicar contexto, decisão técnica ou impacto;
+- Indicar breaking changes com `!`, por exemplo: `feat(api)!: change authentication response contract`.
+
+Exemplo de commit deste projeto:
+
+```text
+docs(readme): document frontend flows and entities
+```
+
+Como referência para esse padrão, consulte o vídeo [Conventional Commits](https://www.youtube.com/watch?v=P_DeVtGP3VE).
+
 # Fase 1:
 ## Documentação e Requisitos:
 Dentro da pasta documentacao, tem o arquivo main.tex e o compilado dele main.pd que define os requisitos e arquitetura do projeto com justificativas.
@@ -100,6 +191,38 @@ O front-end agora possui uma área autenticada mobile-first para alunos, constru
 - preferência de tema claro/escuro persistida globalmente no `localStorage`;
 - alteração da preferência preparada em um serviço mockado com o caminho `PATCH /api/usuarios/{id}/preferencia-tema`.
 
+#### Autômato finito determinístico do login
+
+O fluxo de autenticação pode ser representado como um autômato finito determinístico. Cada estado corresponde a uma tela ou situação da sessão, e cada transição é causada por uma leitura do formulário, pelo resultado da autenticação ou por uma ação de navegação.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Login: aplicação iniciada sem sessão
+
+    Login --> Login: credenciais inválidas / LOGIN_INVALIDO
+    Login --> ContaDesativada: credenciais válidas + ativo = false
+    Login --> AreaAluno: credenciais válidas + tipo = ALUNO
+    Login --> AreaAdmin: credenciais válidas + tipo = ADMIN
+
+    ContaDesativada --> Login: voltar para o login
+
+    AreaAluno --> Login: sair / limpar sessionStorage
+    AreaAdmin --> Login: sair / limpar sessionStorage
+
+    Login --> AreaAluno: sessão salva + tipo = ALUNO
+    Login --> AreaAdmin: sessão salva + tipo = ADMIN
+    Login --> ContaDesativada: sessão salva + ativo = false
+```
+
+| Estado | Tela ou destino | Entrada lida |
+| --- | --- | --- |
+| `Login` | `/login` | Aplicação iniciada sem usuário autenticado ou credenciais inválidas |
+| `ContaDesativada` | `/desativado` | Usuário encontrado, mas com `ativo = false` |
+| `AreaAluno` | `/app` | Usuário autenticado com `tipo = ALUNO` |
+| `AreaAdmin` | `/admin` | Usuário autenticado com `tipo = ADMIN` |
+
+Quando o login é concluído, o usuário é salvo no `sessionStorage`. Em uma nova leitura da aplicação, esse valor é usado para decidir diretamente entre `/app`, `/admin` e `/desativado`. Credenciais inválidas não mudam de tela: o autômato permanece em `/login` e exibe a mensagem de erro.
+
 ### Área do aluno
 
 A área `/app` possui quatro abas:
@@ -112,6 +235,77 @@ A área `/app` possui quatro abas:
 ### Catálogo de exercícios e histórico
 
 O front-end possui um catálogo mockado com 50 exercícios comuns de academia. Cada exercício segue o modelo previsto no back-end, com identificador, nome, grupo muscular, equipamento, descrição, instruções e mídia. As métricas de carga e 1RM são vinculadas ao `exercicioId` e apresentam a evolução organizada por mês.
+
+#### Diagrama conceitual de entidades
+
+O relacionamento entre o catálogo de exercícios e o histórico pode ser visualizado abaixo. Um usuário registra treinos; cada treino possui séries executadas; e cada série referencia um exercício. As métricas de histórico são agregações calculadas a partir dessas séries e agrupadas por exercício e período.
+
+```mermaid
+erDiagram
+    USUARIO ||--o{ TREINO : realiza
+    TREINO ||--|{ SERIE_EXECUTADA : contem
+    EXERCICIO ||--o{ SERIE_EXECUTADA : participa
+    USUARIO ||--|| HISTORICO_ALUNO : possui
+    HISTORICO_ALUNO ||--o{ METRICA_MENSAL : agrega
+    EXERCICIO ||--o{ METRICA_EXERCICIO : possui
+    HISTORICO_ALUNO ||--o{ METRICA_EXERCICIO : apresenta
+
+    USUARIO {
+        int id PK
+        string nome
+        string email
+        string tipo
+    }
+
+    TREINO {
+        int id PK
+        int alunoId FK
+        string status
+        datetime inicio
+        datetime fim
+    }
+
+    SERIE_EXECUTADA {
+        int id PK
+        int treinoId FK
+        int exercicioId FK
+        int numeroSerie
+        int repeticoes
+        decimal cargaKg
+        string tipoTecnica
+    }
+
+    EXERCICIO {
+        int id PK
+        string nome
+        string grupoMuscular
+        string equipamento
+        string instrucoesExecucao
+        string midia
+    }
+
+    HISTORICO_ALUNO {
+        int usuarioId FK
+        string periodo
+    }
+
+    METRICA_MENSAL {
+        string tipo
+        string periodo
+        decimal valor
+        decimal variacao
+    }
+
+    METRICA_EXERCICIO {
+        int exercicioId FK
+        string tipo
+        string periodo
+        decimal carga
+        decimal oneRepMax
+    }
+```
+
+No frontend, `HistoricoAluno` reúne as métricas gerais, as métricas específicas de cada exercício e a lista de treinos realizados. A entidade `SerieExecutada` representa a origem dos valores de volume, carga e 1RM; `MetricaExercicio` representa a evolução desses valores para um `exercicioId` selecionado.
 
 As consultas são isoladas em serviços (`buscarExercicios` e `buscarHistoricoAluno`) e condicionadas por `VITE_USE_MOCK`. Assim, a troca para `false` mantém o contrato pronto para os endpoints da API, atualmente documentados como `GET /api/exercicios` e `GET /api/alunos/{id}/progresso/{exercicioId}`.
 
