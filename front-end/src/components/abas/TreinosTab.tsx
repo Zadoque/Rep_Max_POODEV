@@ -152,7 +152,7 @@ function ModalTreino({ modo, rotina, exercicios, atualizadoEm, onChange, onClose
 
         const exerciciosOrdenados = [...rotina.exercicios]
         const [itemMovido] = exerciciosOrdenados.splice(indiceArrastado, 1)
-        const indiceInsercao = indiceDestinoSolto > indiceArrastado ? indiceDestinoSolto - 1 : indiceDestinoSolto
+        const indiceInsercao = indiceDestinoSolto
 
         exerciciosOrdenados.splice(indiceInsercao, 0, itemMovido)
         onChange({ ...rotina, exercicios: exerciciosOrdenados })
