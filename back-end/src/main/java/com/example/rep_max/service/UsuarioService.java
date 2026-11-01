@@ -10,7 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +35,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = mapper.toEntity(request);
-
+        usuario.setEmail(email);
         usuario.setPerfil(TipoPerfil.ALUNO);
 
         usuario.setSenhaHash(passwordEncoder.encode(request.senha()));
@@ -40,6 +44,30 @@ public class UsuarioService {
 
         return mapper.toResponse(usuarioSalvo);
     }
+
+    public List<UsuarioResponse> getAll() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    public Optional<UsuarioResponse> getById(Long id) {
+        return usuarioRepository.findById(id)
+                .map(mapper::toResponse);
+    }
+    @Transactional
+    public void desativarUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado"
+                ));
+        usuario.setAtivo(false);
+
+    }
+
+
 
 
 
