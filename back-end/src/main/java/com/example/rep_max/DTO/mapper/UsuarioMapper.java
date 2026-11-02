@@ -25,7 +25,6 @@ public interface UsuarioMapper {
 
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "nome", source = "nome")
-    @Mapping(target = "email", source = "email")
     void updateEntity(
             UsuarioUpdateRequest request,
             @MappingTarget Usuario usuario

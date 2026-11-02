@@ -12,7 +12,6 @@ COPY src/ src/
 
 RUN ./mvnw -B -DskipTests package
 
-
 # Etapa 2: executar somente o JAR gerado
 FROM eclipse-temurin:21-jre-jammy
 

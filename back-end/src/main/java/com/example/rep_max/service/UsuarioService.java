@@ -67,6 +67,15 @@ public class UsuarioService {
 
     }
 
+    public UsuarioResponse getByEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado"
+                ));
+        return mapper.toResponse(usuario);
+    }
+
 
 
 
