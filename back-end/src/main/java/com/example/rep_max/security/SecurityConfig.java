@@ -1,5 +1,6 @@
 package com.example.rep_max.security;
 
+import com.example.rep_max.repository.UsuarioRepository;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -33,7 +35,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            DaoAuthenticationProvider authenticationProvider
+            DaoAuthenticationProvider authenticationProvider,
+            UsuarioRepository usuarioRepository
     ) throws Exception {
 
         http
@@ -133,6 +136,11 @@ public class SecurityConfig {
                                         )
                         )
                 );
+
+        http.addFilterBefore(
+                new UsuarioAtivoFilter(usuarioRepository),
+                AuthorizationFilter.class
+        );
 
         return http.build();
     }

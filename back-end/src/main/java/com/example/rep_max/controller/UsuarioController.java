@@ -20,6 +20,7 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponse> getMyUser(Authentication authentication) {
         UsuarioResponse usuarioResponse = usuarioService.getByEmail(
@@ -27,6 +28,13 @@ public class UsuarioController {
 
         return ResponseEntity.ok(usuarioResponse);
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.of(usuarioService.getById(id));
+    }
+
 
     @GetMapping()
     public ResponseEntity<List<UsuarioResponse>> getAllUsuarios() {
@@ -38,9 +46,9 @@ public class UsuarioController {
             Authentication authentication,
             HttpServletRequest request,
             HttpServletResponse response) {
-        UsuarioResponse usuarioResponse = usuarioService.
-                getByEmail(authentication.getName());
-        usuarioService.desativarUsuario(usuarioResponse.id());
+
+
+        usuarioService.desativarPorEmail(authentication.getName());
 
         new SecurityContextLogoutHandler()
                 .logout(request, response, authentication);
@@ -48,10 +56,6 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.of(usuarioService.getById(id));
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> desativarUsuarioPorId(@PathVariable Long id) {
