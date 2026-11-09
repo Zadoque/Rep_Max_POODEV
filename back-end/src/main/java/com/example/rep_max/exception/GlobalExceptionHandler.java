@@ -32,9 +32,6 @@ public class GlobalExceptionHandler {
 
             causa = causa.getCause();
         }
-
-        // Outras falhas de integridade não são necessariamente
-        // conflitos de e-mail.
         throw exception;
     }
 }

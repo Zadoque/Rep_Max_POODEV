@@ -39,5 +39,5 @@ public class Exercicio {
     private String urlMidia;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private boolean ativo = true;
 }
