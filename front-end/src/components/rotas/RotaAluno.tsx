@@ -1,18 +1,19 @@
 import { Navigate, Outlet } from "react-router"
+
 import { useAutenticacao } from "../../hooks/use-autenticacao"
 
 export default function RotaAluno() {
-    const { usuario } = useAutenticacao();
+    const { usuario } = useAutenticacao()
     if (!usuario) {
-      return <Navigate to="/login" replace />
-    } 
+        return <Navigate to="/login" replace />
+    }
 
     if (!usuario.ativo) {
-      return <Navigate to="/desativado" replace />
+        return <Navigate to="/desativado" replace />
     }
 
     if (usuario.tipo === "ADMIN") {
-      return <Navigate to="/admin" replace />
+        return <Navigate to="/admin" replace />
     }
     return <Outlet />
 }

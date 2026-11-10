@@ -1,27 +1,29 @@
-import type CredenciaisLogin from "../types/autenticacao";
-import { usuariosMock } from "../mocks/usuarios-mock";
-import type { ResultadoAutenticacao } from "../types/autenticacao";
-import type UsuarioLogado from "../types/usuario-logado";
-import { normalizarEmail } from "../utils/normalizar-email";
-export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise< ResultadoAutenticacao> {
+import type CredenciaisLogin from "../types/autenticacao"
+import type { ResultadoAutenticacao } from "../types/autenticacao"
+import type UsuarioLogado from "../types/usuario-logado"
+import { normalizarEmail } from "../utils/normalizar-email"
+import { lerUsuariosAdminMock } from "./admin"
+export async function autenticarUsuario(
+    credenciais: CredenciaisLogin,
+): Promise<ResultadoAutenticacao> {
     const credenciaisNormalizadas: CredenciaisLogin = {
         ...credenciais,
         email: normalizarEmail(credenciais.email),
     }
 
     if (import.meta.env.VITE_USE_MOCK === "true") {
-        const usuario = usuariosMock.find(
+        const usuario = lerUsuariosAdminMock().find(
             (usuario) =>
                 usuario.email === credenciaisNormalizadas.email &&
-                usuario.senha === credenciaisNormalizadas.senha
-        );
+                usuario.senha === credenciaisNormalizadas.senha,
+        )
 
         if (usuario) {
             if (!usuario.ativo) {
                 return {
                     codigoErroLogin: "CONTA_DESATIVADA",
-                    sucesso: false
-                };
+                    sucesso: false,
+                }
             }
             const usuarioLogado: UsuarioLogado = {
                 id: usuario.id,
@@ -30,30 +32,30 @@ export async function autenticarUsuario(credenciais: CredenciaisLogin): Promise<
                 tipo: usuario.tipo,
                 ativo: usuario.ativo,
                 preferenciaTema: usuario.preferenciaTema,
-            };
+            }
             return {
                 usuarioLogado,
-                sucesso: true
-            };
+                sucesso: true,
+            }
         } else {
             return {
                 codigoErroLogin: "LOGIN_INVALIDO",
-                sucesso: false
-            };
+                sucesso: false,
+            }
         }
     } else {
         try {
-           //fetch real para autenticação
+            //fetch real para autenticação
         } catch (error) {
-            console.error("Erro na autenticação:", error);
+            console.error("Erro na autenticação:", error)
             return {
                 codigoErroLogin: "LOGIN_INVALIDO",
-                sucesso: false
-            };
+                sucesso: false,
+            }
         }
     }
     return {
         codigoErroLogin: "LOGIN_INVALIDO",
-        sucesso: false
-    };
+        sucesso: false,
+    }
 }

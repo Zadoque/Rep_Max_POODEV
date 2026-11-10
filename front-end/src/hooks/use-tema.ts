@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+
 import type { PreferenciaTema } from "../types/usuario-logado"
 
 type Tema = "claro" | "escuro"
@@ -22,7 +23,7 @@ export function useTema(preferenciaInicial?: PreferenciaTema) {
     }, [tema])
 
     function alternarTema() {
-        setTema((temaAtual) => temaAtual === "claro" ? "escuro" : "claro")
+        setTema((temaAtual) => (temaAtual === "claro" ? "escuro" : "claro"))
     }
 
     function definirTema(novoTema: Tema) {

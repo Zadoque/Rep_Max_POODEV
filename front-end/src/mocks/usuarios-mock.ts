@@ -1,8 +1,8 @@
-import type UsuarioLogado  from "../types/usuario-logado";
+import type UsuarioLogado from "../types/usuario-logado"
 
 export interface UsuarioMock extends UsuarioLogado {
-    ativo: boolean;
-    senha: string;
+    ativo: boolean
+    senha: string
 }
 
 export const usuariosMock: UsuarioMock[] = [
@@ -13,7 +13,7 @@ export const usuariosMock: UsuarioMock[] = [
         tipo: "ALUNO",
         ativo: true,
         preferenciaTema: "CLARO",
-        senha: "123456"
+        senha: "123456",
     },
     {
         id: 2,
@@ -22,7 +22,7 @@ export const usuariosMock: UsuarioMock[] = [
         tipo: "ALUNO",
         ativo: false,
         preferenciaTema: "CLARO",
-        senha: "123456"
+        senha: "123456",
     },
     {
         id: 3,
@@ -31,7 +31,7 @@ export const usuariosMock: UsuarioMock[] = [
         tipo: "ALUNO",
         ativo: true,
         preferenciaTema: "ESCURO",
-        senha: "123456"
+        senha: "123456",
     },
     {
         id: 4,
@@ -40,6 +40,6 @@ export const usuariosMock: UsuarioMock[] = [
         tipo: "ADMIN",
         ativo: true,
         preferenciaTema: "CLARO",
-        senha: "123456"
-    }
-];
+        senha: "123456",
+    },
+]
