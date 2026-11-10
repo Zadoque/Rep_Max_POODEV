@@ -1,10 +1,14 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
+
 import HistoricoTab from "../components/abas/HistoricoTab"
 import InicioTab from "../components/abas/InicioTab"
 import PerfilTab from "../components/abas/PerfilTab"
 import TreinosTab from "../components/abas/TreinosTab"
-import NavegacaoPrincipal, { NavegacaoMobile, type AbaPrincipal } from "../components/navegacao/NavegacaoPrincipal"
+import NavegacaoPrincipal, {
+    type AbaPrincipal,
+    NavegacaoMobile,
+} from "../components/navegacao/NavegacaoPrincipal"
 import { useAutenticacao } from "../hooks/use-autenticacao"
 import { useTema } from "../hooks/use-tema"
 import { atualizarPreferenciaTema } from "../services/preferencias-usuario"
@@ -18,8 +22,12 @@ export default function AlunoHomePage() {
     if (!usuario || usuario.tipo !== "ALUNO") {
         return (
             <div className="p-6 text-center">
-                <h1 className="text-2xl font-bold text-slate-950 dark:text-white">Acesso restrito</h1>
-                <p className="mt-2 text-slate-600 dark:text-slate-300">Apenas alunos podem acessar esta página.</p>
+                <h1 className="text-2xl font-bold text-slate-950 dark:text-white">
+                    Acesso restrito
+                </h1>
+                <p className="mt-2 text-slate-600 dark:text-slate-300">
+                    Apenas alunos podem acessar esta página.
+                </p>
             </div>
         )
     }
@@ -49,7 +57,13 @@ export default function AlunoHomePage() {
             case "historico":
                 return <HistoricoTab usuarioId={usuarioAtual.id} />
             case "perfil":
-                return <PerfilTab usuarioId={usuarioAtual.id} tema={tema} onDefinirTema={alterarPreferenciaTema} />
+                return (
+                    <PerfilTab
+                        usuarioId={usuarioAtual.id}
+                        tema={tema}
+                        onDefinirTema={alterarPreferenciaTema}
+                    />
+                )
             case "inicio":
             default:
                 return <InicioTab usuarioId={usuarioAtual.id} />
@@ -61,8 +75,12 @@ export default function AlunoHomePage() {
             <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
                 <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">Rep Max</p>
-                        <p className="mt-1 text-lg font-bold text-slate-950 dark:text-white">Olá, {usuario.nome}</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                            Rep Max
+                        </p>
+                        <p className="mt-1 text-lg font-bold text-slate-950 dark:text-white">
+                            Olá, {usuario.nome}
+                        </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button

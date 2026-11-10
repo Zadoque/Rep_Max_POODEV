@@ -3,7 +3,7 @@ import type { StatusTreino } from "./treino-resumo"
 export default interface ResumoHomeAluno {
     treinoAtual: {
         id: number
-        status: Extract<StatusTreino, "EM_ANDAMENTO" | "PAUSADO" | "NAO_INICIADO">
+        status: Extract<StatusTreino, "EM_ANDAMENTO" | "PAUSADO">
         inicio: string
         nomeRotina: string | null
     } | null
