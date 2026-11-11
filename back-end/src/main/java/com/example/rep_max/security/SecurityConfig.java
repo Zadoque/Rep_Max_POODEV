@@ -98,6 +98,22 @@ public class SecurityConfig {
 
 
 
+                        .requestMatchers(HttpMethod.POST,  "/rotinas")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/rotinas/{id}",
+                                "/rotinas")
+                        .hasAnyRole("ALUNO","ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/rotinas/{id}")
+                        .hasAnyRole("ADMIN", "ALUNO")
+
+                        .requestMatchers(HttpMethod.PUT, "/rotinas/{id}")
+                        .hasAnyRole("ADMIN", "ALUNO")
+
+
+
                         .anyRequest()
                         .denyAll()
                 )
