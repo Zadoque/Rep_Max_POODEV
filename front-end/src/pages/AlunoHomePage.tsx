@@ -66,7 +66,12 @@ export default function AlunoHomePage() {
                 )
             case "inicio":
             default:
-                return <InicioTab usuarioId={usuarioAtual.id} />
+                return (
+                    <InicioTab
+                        usuarioId={usuarioAtual.id}
+                        onIniciarTreino={(treinoId) => navigate(`/app/treino/${treinoId}`)}
+                    />
+                )
         }
     }
 

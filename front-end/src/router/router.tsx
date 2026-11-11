@@ -5,6 +5,7 @@ import RotaAluno from "../components/rotas/RotaAluno"
 import AdminHomePage from "../pages/AdminHomePage"
 import AlunoHomePage from "../pages/AlunoHomePage"
 import ContaDesativadaPage from "../pages/ContaDesativadaPage"
+import ExecucaoTreinoPage from "../pages/ExecucaoTreinoPage"
 import LoginPage from "../pages/LoginPage"
 
 export const router = createBrowserRouter([
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
             {
                 path: "app",
                 Component: AlunoHomePage,
+            },
+            {
+                path: "app/treino/:treinoId",
+                Component: ExecucaoTreinoPage,
             },
         ],
     },

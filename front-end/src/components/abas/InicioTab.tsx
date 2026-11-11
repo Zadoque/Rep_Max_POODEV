@@ -9,6 +9,7 @@ const formatarData = (valor: string) =>
 
 interface InicioTabProps {
     usuarioId: number
+    onIniciarTreino: (treinoId: number) => void
 }
 
 const mensagensPorStatus: Record<StatusTreino, { titulo: string; descricao: string }> = {
@@ -26,7 +27,7 @@ const mensagensPorStatus: Record<StatusTreino, { titulo: string; descricao: stri
     },
 }
 
-export default function InicioTab({ usuarioId }: InicioTabProps) {
+export default function InicioTab({ usuarioId, onIniciarTreino }: InicioTabProps) {
     const resumo = resumosHomeAlunoMock[usuarioId] ?? resumosHomeAlunoMock[1]
     const treinoAtual = resumo.treinoAtual
     const treinoDetalhado = treinoAtual
@@ -70,6 +71,8 @@ export default function InicioTab({ usuarioId }: InicioTabProps) {
                     </div>
                     <button
                         type="button"
+                        onClick={() => treinoAtual && onIniciarTreino(treinoAtual.id)}
+                        disabled={!treinoAtual}
                         className="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600"
                     >
                         {treinoAtual?.status === "PAUSADO" ? "Continuar treino" : "Começar treino"}
