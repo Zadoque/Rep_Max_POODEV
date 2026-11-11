@@ -35,7 +35,7 @@ export default function HistoricoTab({ usuarioId }: { usuarioId: number }) {
         <div className="space-y-6">
             <HistoricoSecaoTabs ativa={secaoAtiva} onChange={setSecaoAtiva} />
             <section>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-400">
+                <p className="text-sm font-semibold uppercase tracking-brand text-emerald-700 dark:text-emerald-400">
                     Acompanhe sua evolução
                 </p>
                 <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">

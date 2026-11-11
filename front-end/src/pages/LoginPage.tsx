@@ -43,21 +43,17 @@ export default function LoginPage() {
     }
 
     return (
-        <main className="flex h-screen max-h-screen flex-col overflow-hidden bg-[#f8faf9] text-slate-950 dark:bg-[#101412] dark:text-white md:grid md:grid-cols-2">
+        <main className="flex h-screen max-h-screen flex-col overflow-hidden bg-brand-ice text-slate-950 dark:bg-brand-night dark:text-white md:grid md:grid-cols-2">
             <section
                 style={{ backgroundImage: `url(${logo})` }}
-                className="flex min-h-0 flex-1 animate-login-background-mobile bg-black bg-[length:auto_100%] bg-no-repeat px-6 py-6 text-white [text-shadow:4px_4px_4px_rgba(0,0,0,0.18)] md:animate-login-background md:items-center md:justify-center md:px-8 md:py-10"
+                className="text-shadow-login-panel flex min-h-0 flex-1 animate-login-background-mobile bg-black bg-[length:auto_100%] bg-no-repeat px-6 py-6 text-white md:animate-login-background md:items-center md:justify-center md:px-8 md:py-10"
             >
                 <div className="flex max-w-lg flex-col justify-center md:block">
-                    <p className="inline-flex gap-2 text-lg font-bold uppercase tracking-[0.2em] md:text-3xl md:tracking-[0.25em]">
-                        <span className="text-[#00c878] [text-shadow:0_1px_3px_rgba(255,255,255,0.95)]">
-                            REP
-                        </span>
-                        <span className="text-white [text-shadow:0_1px_3px_rgba(0,200,120,0.95)]">
-                            MAX
-                        </span>
+                    <p className="inline-flex gap-2 text-lg font-bold uppercase tracking-brand-wide md:text-3xl md:tracking-brand-display">
+                        <span className="text-brand-green text-shadow-logo-rep">REP</span>
+                        <span className="text-shadow-logo-max text-white">MAX</span>
                     </p>
-                    <h1 className="mt-2 text-xl font-bold leading-tight tracking-tight text-emerald-200 [text-shadow:2px_2px_3px_rgba(0,0,0,0.85)] md:mt-5 md:text-5xl">
+                    <h1 className="text-shadow-login-title mt-2 text-xl font-bold leading-tight tracking-tight text-emerald-200 md:mt-5 md:text-5xl">
                         Olá!
                         <br />
                         Seja bem-vindo de volta.

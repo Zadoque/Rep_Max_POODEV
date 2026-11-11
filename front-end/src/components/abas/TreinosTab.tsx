@@ -79,7 +79,7 @@ export default function TreinosTab({ usuarioId }: { usuarioId: number }) {
         <div className="space-y-6">
             <section className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-400">
+                    <p className="text-sm font-semibold uppercase tracking-brand text-emerald-700 dark:text-emerald-400">
                         Biblioteca
                     </p>
                     <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">

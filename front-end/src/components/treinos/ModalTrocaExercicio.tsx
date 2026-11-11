@@ -30,7 +30,7 @@ export default function ModalTrocaExercicio({
                 className="w-full max-w-xl rounded-3xl bg-white p-6 shadow-2xl dark:bg-slate-900"
                 onMouseDown={(evento) => evento.stopPropagation()}
             >
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-400">
+                <p className="text-sm font-semibold uppercase tracking-brand text-emerald-700 dark:text-emerald-400">
                     Editar exercício
                 </p>
                 <h3 className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">

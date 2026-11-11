@@ -3,8 +3,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+    --color-brand-ice: #f8faf9;
+    --color-brand-night: #101412;
+    --color-brand-green: #00c878;
+    --shadow-card: 0 10px 30px rgb(15 23 42 / 0.08);
+    --tracking-brand: 0.18em;
+    --tracking-brand-wide: 0.2em;
+    --tracking-brand-display: 0.25em;
     --animate-login-background: login-background 45s linear infinite alternate;
     --animate-login-background-mobile: login-background-mobile 5s linear infinite alternate;
+}
+
+@utility text-shadow-login-panel {
+    text-shadow: 4px 4px 4px rgb(0 0 0 / 18%);
+}
+
+@utility text-shadow-logo-rep {
+    text-shadow: 0 1px 3px rgb(255 255 255 / 95%);
+}
+
+@utility text-shadow-logo-max {
+    text-shadow: 0 1px 3px rgb(0 200 120 / 95%);
+}
+
+@utility text-shadow-login-title {
+    text-shadow: 2px 2px 3px rgb(0 0 0 / 85%);
 }
 
 @keyframes login-background {
@@ -33,6 +56,22 @@
     #root {
         min-height: 100%;
     }
+
+    :where(button, a, input, select, textarea):focus-visible {
+        outline: 2px solid var(--color-brand-green);
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 :root {
@@ -53,8 +92,8 @@
 }
 
 body {
-    min-width: 320px;
     margin: 0;
+    overflow-x: hidden;
 }
 
 button,

@@ -56,7 +56,7 @@ export default function ModalTreino({
             >
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-400">
+                        <p className="text-sm font-semibold uppercase tracking-brand text-emerald-700 dark:text-emerald-400">
                             Biblioteca
                         </p>
                         <h2

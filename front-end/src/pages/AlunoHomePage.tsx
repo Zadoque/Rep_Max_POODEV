@@ -71,11 +71,11 @@ export default function AlunoHomePage() {
     }
 
     return (
-        <div className="min-h-screen bg-[#f8faf9] pb-24 text-slate-900 transition-colors dark:bg-[#101412] dark:text-slate-100 md:pb-0">
+        <div className="min-h-screen min-w-0 overflow-x-hidden bg-brand-ice pb-24 text-slate-900 transition-colors dark:bg-brand-night dark:text-slate-100 md:pb-0">
             <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
                 <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
                     <div>
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-400">
+                        <p className="text-xs font-bold uppercase tracking-brand-wide text-emerald-700 dark:text-emerald-400">
                             Rep Max
                         </p>
                         <p className="mt-1 text-lg font-bold text-slate-950 dark:text-white">

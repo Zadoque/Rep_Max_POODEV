@@ -44,7 +44,7 @@ export function CabecalhoAdminModal({
     return (
         <div className="flex items-start justify-between gap-4">
             <div>
-                <p className="text-sm font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-400">
+                <p className="text-sm font-bold uppercase tracking-brand text-emerald-700 dark:text-emerald-400">
                     {subtitulo}
                 </p>
                 <h2 id={titulo} className="mt-2 text-2xl font-bold text-slate-950 dark:text-white">

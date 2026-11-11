@@ -109,7 +109,7 @@ export default function AdminHomePage() {
     if (!usuario || usuario.tipo !== "ADMIN") return <main className="p-8">Acesso restrito.</main>
 
     return (
-        <main className="min-h-screen bg-[#f8faf9] text-slate-950 dark:bg-[#101412] dark:text-white">
+        <main className="min-h-screen min-w-0 overflow-x-hidden bg-brand-ice text-slate-950 dark:bg-brand-night dark:text-white">
             <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
                 <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
                     <div>
