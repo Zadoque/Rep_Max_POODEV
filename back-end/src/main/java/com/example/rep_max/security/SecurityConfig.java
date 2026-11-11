@@ -82,6 +82,22 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}")
                         .hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST,  "/exercicios")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/exercicios/{id}",
+                                "/exercicios")
+                        .hasAnyRole("ALUNO","ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/exercicios/{id}")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/exercicios/{id}")
+                        .hasRole("ADMIN")
+
+
+
                         .anyRequest()
                         .denyAll()
                 )
