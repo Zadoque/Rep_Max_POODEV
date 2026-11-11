@@ -238,74 +238,164 @@ O front-end possui um catálogo mockado com 50 exercícios comuns de academia. C
 
 #### Diagrama conceitual de entidades
 
-O relacionamento entre o catálogo de exercícios e o histórico pode ser visualizado abaixo. Um usuário registra treinos; cada treino possui séries executadas; e cada série referencia um exercício. As métricas de histórico são agregações calculadas a partir dessas séries e agrupadas por exercício e período.
+O modelo abaixo representa a modelagem alvo das entidades persistentes da API. A rotina usa uma estrutura de item-pai com especializações: um item pode representar um exercício normal ou um grupo de técnica combinada. Isso evita `exercicioId` e `grupoTecnicaId` nulos na mesma tabela e deixa a quantidade de séries no nível correto. `HistoricoAluno`, `MetricaMensal` e `MetricaExercicio` são projeções de consulta usadas pelo front-end; não são entidades persistidas independentes.
+
+> A estrutura de técnicas combinadas utiliza um item-pai especializado, com a quantidade de séries definida no grupo e os exercícios vinculados pela ordem interna.
 
 ```mermaid
 erDiagram
+    USUARIO ||--o{ ROTINA_TREINO : cria
     USUARIO ||--o{ TREINO : realiza
-    TREINO ||--|{ SERIE_EXECUTADA : contem
-    EXERCICIO ||--o{ SERIE_EXECUTADA : participa
-    USUARIO ||--|| HISTORICO_ALUNO : possui
-    HISTORICO_ALUNO ||--o{ METRICA_MENSAL : agrega
-    EXERCICIO ||--o{ METRICA_EXERCICIO : possui
-    HISTORICO_ALUNO ||--o{ METRICA_EXERCICIO : apresenta
+    ROTINA_TREINO ||--o{ ITEM_ROTINA : contem
+    ITEM_ROTINA ||--o| ITEM_ROTINA_EXERCICIO : especializa
+    ITEM_ROTINA ||--o| ITEM_ROTINA_TECNICA : especializa
+    ITEM_ROTINA_EXERCICIO }o--|| EXERCICIO : referencia
+    ITEM_ROTINA_TECNICA ||--|{ ITEM_TECNICA_EXERCICIO : agrupa
+    ITEM_TECNICA_EXERCICIO }o--|| EXERCICIO : referencia
+    ROTINA_TREINO o|--o{ TREINO : origina
+    TREINO ||--|{ ITEM_TREINO : congela
+    ITEM_TREINO ||--o| ITEM_TREINO_EXERCICIO : especializa
+    ITEM_TREINO ||--o| ITEM_TREINO_TECNICA : especializa
+    ITEM_TREINO_TECNICA ||--|{ ITEM_TREINO_TECNICA_EXERCICIO : contem
+    ITEM_TREINO_EXERCICIO }o--|| EXERCICIO : executa
+    ITEM_TREINO_TECNICA_EXERCICIO }o--|| EXERCICIO : executa
+    TREINO ||--|{ SERIE_EXECUTADA : registra
+    EXERCICIO ||--o{ SERIE_EXECUTADA : executado_em
 
     USUARIO {
-        int id PK
+        Long id PK
         string nome
         string email
-        string tipo
-    }
-
-    TREINO {
-        int id PK
-        int alunoId FK
-        string status
-        datetime inicio
-        datetime fim
-    }
-
-    SERIE_EXECUTADA {
-        int id PK
-        int treinoId FK
-        int exercicioId FK
-        int numeroSerie
-        int repeticoes
-        decimal cargaKg
-        string tipoTecnica
+        string senhaHash
+        TipoPerfil perfil
+        boolean ativo
     }
 
     EXERCICIO {
-        int id PK
+        Long id PK
         string nome
-        string grupoMuscular
-        string equipamento
+        GrupoMuscular grupoMuscular
+        string descricao
         string instrucoesExecucao
-        string midia
+        string urlMidia
+        boolean ativo
     }
 
-    HISTORICO_ALUNO {
-        int usuarioId FK
-        string periodo
+    ROTINA_TREINO {
+        Long id PK
+        Long alunoId FK
+        string nome
+        boolean ativa
+        int ordemExecucao "nullable"
+        boolean incluirNaFila
     }
 
-    METRICA_MENSAL {
-        string tipo
-        string periodo
-        decimal valor
-        decimal variacao
+    ITEM_ROTINA {
+        Long id PK
+        Long rotinaId FK
+        int ordem
+        TipoItemRotina tipoItem
     }
 
-    METRICA_EXERCICIO {
-        int exercicioId FK
-        string tipo
-        string periodo
-        decimal carga
-        decimal oneRepMax
+    ITEM_ROTINA_EXERCICIO {
+        Long itemRotinaId PK, FK
+        Long exercicioId FK
+        int quantidadeSeries
+    }
+
+    ITEM_ROTINA_TECNICA {
+        Long itemRotinaId PK, FK
+        TipoTecnica tipoTecnica
+        int quantidadeSeries
+    }
+
+    ITEM_TECNICA_EXERCICIO {
+        Long id PK
+        Long itemRotinaTecnicaId FK
+        Long exercicioId FK
+        int ordemNoGrupo
+    }
+
+    TREINO {
+        Long id PK
+        Long alunoId FK
+        Long rotinaOrigemId FK "nullable"
+        datetime inicio
+        datetime fim "nullable"
+        StatusTreino status
+        ConclusaoTreino conclusao "nullable"
+        datetime ultimoEventoEm "nullable"
+        string observacoes
+    }
+
+    ITEM_TREINO {
+        Long id PK
+        Long treinoId FK
+        Long itemRotinaOrigemId FK "nullable"
+        int ordemAtual
+        TipoItemTreino tipoItem
+    }
+
+    ITEM_TREINO_EXERCICIO {
+        Long itemTreinoId PK, FK
+        Long exercicioId FK
+        int quantidadeSeries
+    }
+
+    ITEM_TREINO_TECNICA {
+        Long itemTreinoId PK, FK
+        TipoTecnica tipoTecnica
+        int quantidadeSeries
+    }
+
+    ITEM_TREINO_TECNICA_EXERCICIO {
+        Long id PK
+        Long itemTreinoTecnicaId FK
+        Long exercicioId FK
+        int ordemNoGrupo
+    }
+
+    SERIE_EXECUTADA {
+        Long id PK
+        Long treinoId FK
+        Long itemTreinoId FK
+        Long exercicioId FK
+        int numeroSerie
+        int repeticoes
+        decimal cargaKg
+        int ordemExecucao
+        int etapaDrop "nullable"
+        datetime executadaEm
+        string idempotencyKey
     }
 ```
 
-No frontend, `HistoricoAluno` reúne as métricas gerais, as métricas específicas de cada exercício e a lista de treinos realizados. A entidade `SerieExecutada` representa a origem dos valores de volume, carga e 1RM; `MetricaExercicio` representa a evolução desses valores para um `exercicioId` selecionado.
+#### Dicionário de cardinalidade
+
+| Relacionamento | Cardinalidade | Interpretação |
+| --- | --- | --- |
+| `USUARIO` — `ROTINA_TREINO` | `1 : 0..N` | Um usuário pode não ter nenhuma rotina ou pode criar várias. Cada rotina pertence obrigatoriamente a um aluno. |
+| `USUARIO` — `TREINO` | `1 : 0..N` | Um usuário pode registrar zero ou vários treinos. Cada treino possui exatamente um aluno responsável. |
+| `ROTINA_TREINO` — `ITEM_ROTINA` | `1 : 0..N` | Uma rotina pode ter zero ou vários itens ordenados. Cada item pertence a uma única rotina. A ordem global é armazenada em `ordem`. |
+| `ITEM_ROTINA` — `ITEM_ROTINA_EXERCICIO` | `1 : 0..1` | Um item-pai pode especializar-se em um exercício normal. A especialização possui exatamente um exercício e a quantidade de séries planejadas. |
+| `ITEM_ROTINA` — `ITEM_ROTINA_TECNICA` | `1 : 0..1` | Um item-pai pode especializar-se em uma técnica combinada. Um item deve possuir uma única especialização. |
+| `ITEM_ROTINA_TECNICA` — `ITEM_TECNICA_EXERCICIO` | `1 : 2..N` | Um bi-set, tri-set ou monster set possui dois ou mais exercícios, cada um com uma `ordemNoGrupo`. |
+| `EXERCICIO` — `ITEM_ROTINA_EXERCICIO` | `1 : 0..N` | Um exercício pode aparecer em várias rotinas normais, ou em nenhuma. |
+| `EXERCICIO` — `ITEM_TECNICA_EXERCICIO` | `1 : 0..N` | Um exercício pode participar de vários grupos de técnica, ou de nenhum. |
+| `ROTINA_TREINO` — `TREINO` | `0..1 : 0..N` | Um treino pode ter sido iniciado a partir de zero ou uma rotina. Uma rotina pode originar vários treinos. |
+| `TREINO` — `ITEM_TREINO` | `1 : 1..N` | O treino congela um snapshot dos itens usados na sessão, permitindo alterar a ordem ou substituir exercícios sem modificar a rotina original. |
+| `ITEM_TREINO` — especializações | `1 : 0..1` | Cada item congelado é um exercício normal ou uma técnica combinada. |
+| `ITEM_TREINO_TECNICA` — `ITEM_TREINO_TECNICA_EXERCICIO` | `1 : 2..N` | O grupo da sessão mantém seus exercícios e a ordem usada naquele treino. |
+| `TREINO` — `SERIE_EXECUTADA` | `1 : 1..N` | Um treino registrado possui uma ou mais séries executadas. Cada série pertence a um único treino. |
+| `EXERCICIO` — `SERIE_EXECUTADA` | `1 : 0..N` | Um exercício pode nunca ter sido executado ou pode aparecer em várias séries. Cada série referencia exatamente um exercício. |
+
+No front-end, `HistoricoAluno` reúne as métricas gerais, as métricas específicas de cada exercício e a lista de treinos realizados. A entidade `SerieExecutada` representa a origem dos valores de volume, carga e 1RM; `MetricaExercicio` representa a evolução desses valores para um `exercicioId` selecionado.
+
+Nas técnicas combinadas, `quantidadeSeries` fica em `ITEM_ROTINA_TECNICA`. Cada rodada executada gera uma série para cada exercício do grupo, compartilhando o mesmo `numeroSerie`; a rodada só fica completa quando todos os exercícios foram registrados. `ordemNoGrupo` define a sequência interna, enquanto `ordemAtual` em `ITEM_TREINO` permite reorganizar a sessão sem reescrever a rotina.
+
+`ITEM_TREINO` é um snapshot da rotina no momento em que o treino começa de fato. A primeira série cria o treino e seus itens em uma transação; por isso, fechar a aplicação antes de executar qualquer série não cria uma sessão persistida. `idempotencyKey` impede que uma nova tentativa de rede duplique uma série.
+
+`ordemExecucao` e `incluirNaFila` em `ROTINA_TREINO` controlam a seção “Ordem dos treinos” na aba Treinos. Uma rotina com `incluirNaFila = false` continua salva e pode ser iniciada manualmente, mas não aparece como próximo treino. `NAO_INICIADO` é uma projeção da fila, não um status persistido em `TREINO`.
 
 As consultas são isoladas em serviços (`buscarExercicios` e `buscarHistoricoAluno`) e condicionadas por `VITE_USE_MOCK`. Assim, a troca para `false` mantém o contrato pronto para os endpoints da API, atualmente documentados como `GET /api/exercicios` e `GET /api/alunos/{id}/progresso/{exercicioId}`.
 
