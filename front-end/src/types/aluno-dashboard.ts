@@ -1,18 +1,38 @@
+import type { TipoTecnica, TipoTecnicaCombinada } from "./treino-resumo"
+
+export interface ExercicioGrupo {
+    exercicioId: number
+    ordemNoGrupo: number
+}
+
+export interface ItemRotinaExercicio {
+    id: number
+    tipoItem: "EXERCICIO"
+    exercicioId: number
+    quantidadeSeries: number
+    tipoTecnica: Extract<TipoTecnica, "NORMAL" | "DROP_SET">
+}
+
+export interface ItemRotinaTecnica {
+    id: number
+    tipoItem: "TECNICA"
+    tipoTecnica: TipoTecnicaCombinada
+    quantidadeSeries: number
+    exercicios: ExercicioGrupo[]
+}
+
+export type ItemRotina = ItemRotinaExercicio | ItemRotinaTecnica
+
 export interface RotinaDashboard {
     id: number
     nome: string
     descricao: string
-    exercicios: ExercicioRotina[]
+    itens: ItemRotina[]
     ultimaExecucao: string | null
     atualizadoEm: string
 }
 
-export interface ExercicioRotina {
-    exercicioId: number
-    quantidadeSeries: number
-}
-
-export type RotinaDashboardInput = Pick<RotinaDashboard, "nome" | "descricao" | "exercicios">
+export type RotinaDashboardInput = Pick<RotinaDashboard, "nome" | "descricao" | "itens">
 
 export interface PontoEvolucao {
     label: string

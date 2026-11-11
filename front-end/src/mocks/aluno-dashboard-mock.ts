@@ -1,18 +1,44 @@
-import type { HistoricoAluno, MetricaExercicioHistorico, PerfilDashboard, PontoEvolucao, RotinaDashboard, SerieMetricaHistorico } from "../types/aluno-dashboard"
+import type {
+    HistoricoAluno,
+    ItemRotina,
+    MetricaExercicioHistorico,
+    PerfilDashboard,
+    PontoEvolucao,
+    RotinaDashboard,
+    SerieMetricaHistorico,
+} from "../types/aluno-dashboard"
+import type { TipoTecnicaCombinada } from "../types/treino-resumo"
 import { exerciciosMock } from "./exercicios-mock"
+
+const exercicio = (id: number, quantidadeSeries: number, ordem: number): ItemRotina => ({
+    id: ordem,
+    tipoItem: "EXERCICIO",
+    exercicioId: id,
+    quantidadeSeries,
+    tipoTecnica: "NORMAL",
+})
+const tecnica = (
+    id: number,
+    tipoTecnica: TipoTecnicaCombinada,
+    quantidadeSeries: number,
+    ids: number[],
+): ItemRotina => ({
+    id,
+    tipoItem: "TECNICA",
+    tipoTecnica,
+    quantidadeSeries,
+    exercicios: ids.map((exercicioId, indice) => ({ exercicioId, ordemNoGrupo: indice + 1 })),
+})
 
 export const rotinasDashboardMock: RotinaDashboard[] = [
     {
         id: 1,
         nome: "Treino A — Peito e tríceps",
         descricao: "Foco em força e volume para membros superiores.",
-        exercicios: [
-            { exercicioId: 1, quantidadeSeries: 4 },
-            { exercicioId: 2, quantidadeSeries: 3 },
-            { exercicioId: 6, quantidadeSeries: 3 },
-            { exercicioId: 9, quantidadeSeries: 3 },
-            { exercicioId: 26, quantidadeSeries: 3 },
-            { exercicioId: 27, quantidadeSeries: 3 },
+        itens: [
+            tecnica(101, "BI_SET", 4, [1, 2]),
+            tecnica(102, "TRI_SET", 3, [6, 9, 26]),
+            exercicio(27, 3, 103),
         ],
         ultimaExecucao: "2026-10-12T20:05:00",
         atualizadoEm: "2026-10-12T20:05:00",
@@ -21,13 +47,7 @@ export const rotinasDashboardMock: RotinaDashboard[] = [
         id: 2,
         nome: "Treino B — Costas e bíceps",
         descricao: "Puxadas, remadas e exercícios complementares.",
-        exercicios: [
-            { exercicioId: 10, quantidadeSeries: 4 },
-            { exercicioId: 12, quantidadeSeries: 3 },
-            { exercicioId: 13, quantidadeSeries: 3 },
-            { exercicioId: 14, quantidadeSeries: 3 },
-            { exercicioId: 21, quantidadeSeries: 3 },
-        ],
+        itens: [tecnica(201, "MONSTER_SET", 3, [10, 12, 13, 14]), exercicio(21, 3, 202)],
         ultimaExecucao: "2026-10-09T19:20:00",
         atualizadoEm: "2026-10-09T19:20:00",
     },
@@ -35,15 +55,9 @@ export const rotinasDashboardMock: RotinaDashboard[] = [
         id: 3,
         nome: "Treino C — Pernas",
         descricao: "Rotina completa para quadríceps, posteriores e glúteos.",
-        exercicios: [
-            { exercicioId: 36, quantidadeSeries: 4 },
-            { exercicioId: 37, quantidadeSeries: 4 },
-            { exercicioId: 38, quantidadeSeries: 3 },
-            { exercicioId: 39, quantidadeSeries: 3 },
-            { exercicioId: 40, quantidadeSeries: 3 },
-            { exercicioId: 41, quantidadeSeries: 3 },
-            { exercicioId: 42, quantidadeSeries: 3 },
-        ],
+        itens: [36, 37, 38, 39, 40, 41, 42].map((id, indice) =>
+            exercicio(id, indice < 2 ? 4 : 3, 300 + indice),
+        ),
         ultimaExecucao: null,
         atualizadoEm: "2026-10-01T12:00:00",
     },
@@ -58,9 +72,27 @@ export const evolucaoMock: PontoEvolucao[] = [
 ]
 
 export const historicoTreinosMock = [
-    { id: 101, rotina: "Treino A — Peito e tríceps", data: "2026-10-14T18:30:00", duracao: "42 min", status: "Pausado" },
-    { id: 99, rotina: "Treino B — Costas e bíceps", data: "2026-10-12T19:10:00", duracao: "55 min", status: "Finalizado" },
-    { id: 98, rotina: "Treino A — Peito e tríceps", data: "2026-10-09T18:45:00", duracao: "35 min", status: "Finalizado" },
+    {
+        id: 101,
+        rotina: "Treino A — Peito e tríceps",
+        data: "2026-10-14T18:30:00",
+        duracao: "42 min",
+        status: "Pausado",
+    },
+    {
+        id: 99,
+        rotina: "Treino B — Costas e bíceps",
+        data: "2026-10-12T19:10:00",
+        duracao: "55 min",
+        status: "Finalizado",
+    },
+    {
+        id: 98,
+        rotina: "Treino A — Peito e tríceps",
+        data: "2026-10-09T18:45:00",
+        duracao: "35 min",
+        status: "Concluído parcialmente",
+    },
 ]
 
 export const perfilDashboardMock: PerfilDashboard = {
@@ -77,8 +109,22 @@ export const perfilDashboardMock: PerfilDashboard = {
 export const rotinasDashboardMocksPorUsuario: Record<number, RotinaDashboard[]> = {
     1: rotinasDashboardMock,
     3: [
-        { id: 4, nome: "Treino C — Pernas", descricao: "Rotina completa para quadríceps, posteriores e glúteos.", exercicios: [{ exercicioId: 36, quantidadeSeries: 4 }, { exercicioId: 39, quantidadeSeries: 4 }, { exercicioId: 42, quantidadeSeries: 3 }], ultimaExecucao: "2026-10-23T19:30:00", atualizadoEm: "2026-10-23T19:30:00" },
-        { id: 5, nome: "Treino D — Ombros e abdômen", descricao: "Foco em estabilidade, ombros e fortalecimento do core.", exercicios: [{ exercicioId: 30, quantidadeSeries: 3 }, { exercicioId: 32, quantidadeSeries: 3 }, { exercicioId: 49, quantidadeSeries: 3 }], ultimaExecucao: null, atualizadoEm: "2026-10-03T08:00:00" },
+        {
+            id: 4,
+            nome: "Treino C — Pernas",
+            descricao: "Rotina completa para quadríceps, posteriores e glúteos.",
+            itens: [exercicio(36, 4, 401), exercicio(39, 4, 402), exercicio(42, 3, 403)],
+            ultimaExecucao: "2026-10-23T19:30:00",
+            atualizadoEm: "2026-10-23T19:30:00",
+        },
+        {
+            id: 5,
+            nome: "Treino D — Ombros e abdômen",
+            descricao: "Foco em estabilidade, ombros e fortalecimento do core.",
+            itens: [exercicio(30, 3, 501), exercicio(32, 3, 502), exercicio(49, 3, 503)],
+            ultimaExecucao: null,
+            atualizadoEm: "2026-10-03T08:00:00",
+        },
     ],
 }
 
@@ -96,8 +142,20 @@ export const evolucoesMockPorUsuario: Record<number, PontoEvolucao[]> = {
 export const historicosTreinosMockPorUsuario: Record<number, typeof historicoTreinosMock> = {
     1: historicoTreinosMock,
     3: [
-        { id: 201, rotina: "Treino C — Pernas", data: "2026-10-26T18:00:00", duracao: "Próximo treino", status: "Agendado" },
-        { id: 202, rotina: "Treino B — Costas e bíceps", data: "2026-10-23T18:40:00", duracao: "50 min", status: "Finalizado" },
+        {
+            id: 201,
+            rotina: "Treino C — Pernas",
+            data: "2026-10-26T18:00:00",
+            duracao: "Próximo treino",
+            status: "Agendado",
+        },
+        {
+            id: 202,
+            rotina: "Treino B — Costas e bíceps",
+            data: "2026-10-23T18:40:00",
+            duracao: "50 min",
+            status: "Finalizado",
+        },
     ],
 }
 
@@ -116,7 +174,11 @@ const metricasHistoricoMock: SerieMetricaHistorico[] = [
         descricao: "Estimativa da sua repetição máxima por sessão.",
         unidade: "kg",
         pontos: [
-            { label: "Jun", valor: 82 }, { label: "Jul", valor: 86 }, { label: "Ago", valor: 88 }, { label: "Set", valor: 94 }, { label: "Out", valor: 98 },
+            { label: "Jun", valor: 82 },
+            { label: "Jul", valor: 86 },
+            { label: "Ago", valor: 88 },
+            { label: "Set", valor: 94 },
+            { label: "Out", valor: 98 },
         ],
         variacao: 19,
     },
@@ -126,7 +188,11 @@ const metricasHistoricoMock: SerieMetricaHistorico[] = [
         descricao: "Maior carga registrada por sessão nos exercícios acompanhados.",
         unidade: "kg",
         pontos: [
-            { label: "Jun", valor: 40 }, { label: "Jul", valor: 42 }, { label: "Ago", valor: 45 }, { label: "Set", valor: 47 }, { label: "Out", valor: 50 },
+            { label: "Jun", valor: 40 },
+            { label: "Jul", valor: 42 },
+            { label: "Ago", valor: 45 },
+            { label: "Set", valor: 47 },
+            { label: "Out", valor: 50 },
         ],
         variacao: 25,
     },
@@ -136,13 +202,17 @@ const metricasHistoricoMock: SerieMetricaHistorico[] = [
         descricao: "Quantidade de séries e repetições concluídas por sessão.",
         unidade: "reps",
         pontos: [
-            { label: "Jun", valor: 54 }, { label: "Jul", valor: 61 }, { label: "Ago", valor: 58 }, { label: "Set", valor: 69 }, { label: "Out", valor: 74 },
+            { label: "Jun", valor: 54 },
+            { label: "Jul", valor: 61 },
+            { label: "Ago", valor: 58 },
+            { label: "Set", valor: 69 },
+            { label: "Out", valor: 74 },
         ],
         variacao: 37,
     },
 ]
 
-const metricasHistoricoMockCarlos: SerieMetricaHistorico[] = metricasHistoricoMock.map((metrica, indice) => ({
+const metricasHistoricoMockCarlos = metricasHistoricoMock.map((metrica, indice) => ({
     ...metrica,
     pontos: metrica.pontos.map((ponto, pontoIndice) => ({
         ...ponto,
@@ -150,36 +220,48 @@ const metricasHistoricoMockCarlos: SerieMetricaHistorico[] = metricasHistoricoMo
     })),
     variacao: [46, 24, 18, 31][indice],
 }))
-
-const criarMetricasPorExercicio = (multiplicador: number): MetricaExercicioHistorico[] => exerciciosMock.map((exercicio) => {
-    const base = 20 + ((exercicio.id * 7) % 80)
-    const pontosCarga = [0, 1, 2, 3, 4].map((mes) => ({ label: ["Jun", "Jul", "Ago", "Set", "Out"][mes], valor: base + mes * multiplicador }))
-    const pontosOneRepMax = pontosCarga.map((ponto) => ({ ...ponto, valor: Math.round(ponto.valor * 1.25) }))
-
-    return {
-        exercicioId: exercicio.id,
-        carga: {
-            id: "carga",
-            titulo: `Carga — ${exercicio.nome}`,
-            descricao: `Maior carga registrada mensalmente em ${exercicio.nome}.`,
-            unidade: "kg",
-            pontos: pontosCarga,
-            variacao: Math.round((multiplicador / base) * 400),
-        },
-        oneRepMax: {
-            id: "oneRepMax",
-            titulo: `1RM estimado — ${exercicio.nome}`,
-            descricao: `Evolução mensal do 1RM estimado em ${exercicio.nome}, pela fórmula de Epley.`,
-            unidade: "kg",
-            pontos: pontosOneRepMax,
-            variacao: Math.round((multiplicador / base) * 400),
-        },
-    }
-})
+const criarMetricasPorExercicio = (multiplicador: number): MetricaExercicioHistorico[] =>
+    exerciciosMock.map((item) => {
+        const base = 20 + ((item.id * 7) % 80)
+        const pontosCarga = [0, 1, 2, 3, 4].map((mes) => ({
+            label: ["Jun", "Jul", "Ago", "Set", "Out"][mes],
+            valor: base + mes * multiplicador,
+        }))
+        return {
+            exercicioId: item.id,
+            carga: {
+                id: "carga",
+                titulo: `Carga — ${item.nome}`,
+                descricao: `Maior carga registrada mensalmente em ${item.nome}.`,
+                unidade: "kg",
+                pontos: pontosCarga,
+                variacao: Math.round((multiplicador / base) * 400),
+            },
+            oneRepMax: {
+                id: "oneRepMax",
+                titulo: `1RM estimado — ${item.nome}`,
+                descricao: `Evolução mensal do 1RM estimado em ${item.nome}, pela fórmula de Epley.`,
+                unidade: "kg",
+                pontos: pontosCarga.map((ponto) => ({
+                    ...ponto,
+                    valor: Math.round(ponto.valor * 1.25),
+                })),
+                variacao: Math.round((multiplicador / base) * 400),
+            },
+        }
+    })
 
 export const historicosDashboardMockPorUsuario: Record<number, HistoricoAluno> = {
-    1: { metricas: metricasHistoricoMock, metricasPorExercicio: criarMetricasPorExercicio(4), treinos: historicoTreinosMock },
-    3: { metricas: metricasHistoricoMockCarlos, metricasPorExercicio: criarMetricasPorExercicio(3), treinos: historicosTreinosMockPorUsuario[3] },
+    1: {
+        metricas: metricasHistoricoMock,
+        metricasPorExercicio: criarMetricasPorExercicio(4),
+        treinos: historicoTreinosMock,
+    },
+    3: {
+        metricas: metricasHistoricoMockCarlos,
+        metricasPorExercicio: criarMetricasPorExercicio(3),
+        treinos: historicosTreinosMockPorUsuario[3],
+    },
 }
 
 export const perfisDashboardMockPorUsuario: Record<number, PerfilDashboard> = {
