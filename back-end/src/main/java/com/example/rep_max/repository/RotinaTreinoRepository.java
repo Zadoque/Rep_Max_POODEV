@@ -13,6 +13,7 @@ public interface RotinaTreinoRepository extends JpaRepository<RotinaTreino, Long
     List<RotinaTreino> findAllByAluno_EmailIgnoreCase(String email);
     
     Optional<RotinaTreino> findByIdAndAluno_EmailIgnoreCase(Long id, String email);
+    Optional<RotinaTreino> findByIdAndAluno_EmailIgnoreCaseAndAtivaTrue(Long id, String email);
 
     List<RotinaTreino> findAllByAluno_EmailIgnoreCaseAndAtivaTrue(String email);
 }
