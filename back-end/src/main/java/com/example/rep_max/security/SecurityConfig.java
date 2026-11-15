@@ -97,7 +97,6 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
 
 
-
                         .requestMatchers(HttpMethod.POST,  "/rotinas")
                         .hasAnyRole("ALUNO", "ADMIN")
 
@@ -111,6 +110,32 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.PUT, "/rotinas/{id}")
                         .hasAnyRole("ADMIN", "ALUNO")
+
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/rotinas/{rotinaId}/itens"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/rotinas/{rotinaId}/itens",
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
 
 
 
