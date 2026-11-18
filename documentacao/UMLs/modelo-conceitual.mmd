@@ -1,0 +1,97 @@
+---
+config:
+  theme: neutral
+  look: classic
+  layout: elk
+---
+erDiagram
+    USUARIO ||--o{ ROTINA_TREINO : possui
+    ROTINA_TREINO ||--|{ ITEM_ROTINA : organiza
+    ITEM_ROTINA ||--o| ITEM_ROTINA_EXERCICIO : simples
+    ITEM_ROTINA ||--o| ITEM_ROTINA_TECNICA : tecnica
+    ITEM_ROTINA_TECNICA ||--|{ ITEM_ROTINA_EXERCICIO : agrupa
+    EXERCICIO ||--o{ ITEM_ROTINA_EXERCICIO : compoe
+    ROTINA_TREINO ||--o{ TREINO : origina
+    TREINO ||--o{ GRUPO_SERIE : registra
+    GRUPO_SERIE ||--|{ SERIE_EXECUTADA : detalha
+    EXERCICIO ||--o{ SERIE_EXECUTADA : executado_em
+
+    USUARIO {
+        int id PK
+        string nome
+        string email UK
+        string senhaHash
+        Perfil perfil
+        boolean ativo
+        string fotoUrl
+        decimal peso
+        decimal altura
+        Tema temaPreferido
+    }
+    EXERCICIO {
+        int id PK
+        string slug UK
+        string nome
+        string grupoMuscular
+        string equipamento
+        string descricao
+        string instrucoesExecucao
+        string urlMidia
+        boolean ativo
+    }
+    ROTINA_TREINO {
+        int id PK
+        int alunoId FK
+        string nome
+        string descricao
+        boolean ativa
+        int ordemExecucao
+        datetime atualizadoEm
+    }
+    ITEM_ROTINA {
+        int id PK
+        int rotinaId FK
+        int ordem
+        TipoItem tipoItem
+    }
+    ITEM_ROTINA_EXERCICIO {
+        int id PK
+        int itemRotinaId FK
+        int exercicioId FK
+        int ordemNoItem
+    }
+    ITEM_ROTINA_TECNICA {
+        int id PK
+        int itemRotinaId FK
+        TipoTecnica tipoTecnica
+        int quantidadeSeries
+    }
+    TREINO {
+        int id PK
+        int alunoId FK
+        int rotinaId FK
+        datetime inicio
+        datetime fim
+        StatusTreino status
+        Conclusao conclusao
+        string observacoes
+        json ordemExecutada
+    }
+    GRUPO_SERIE {
+        int id PK
+        int treinoId FK
+        int itemRotinaId FK
+        int numeroSerie
+        StatusSerie status
+        datetime iniciadoEm
+        datetime concluidoEm
+    }
+    SERIE_EXECUTADA {
+        int id PK
+        int grupoSerieId FK
+        int exercicioId FK
+        int repeticoes
+        decimal cargaKg
+        int ordemExecucao
+        datetime registradoEm
+    }
