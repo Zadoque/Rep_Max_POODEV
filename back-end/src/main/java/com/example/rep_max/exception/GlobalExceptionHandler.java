@@ -1,6 +1,9 @@
 package com.example.rep_max.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,20 +14,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private static final String EMAIL_UNIQUE_CONSTRAINT = "uk_usuarios_email_ignore_case";
+    private static final String OPEN_WORKOUT_UNIQUE_CONSTRAINT = "uk_treinos_aluno_aberto";
 
     @ExceptionHandler(RegraNegocioException.class)
     public ResponseEntity<ErroResponse> tratarRegraNegocio(
@@ -67,20 +67,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErroResponse> tratarIntegridade(
             DataIntegrityViolationException exception, HttpServletRequest request
     ) {
-        Throwable causa = exception;
+        String constraintName = constraintName(exception);
 
-        while (causa != null) {
-            if (causa instanceof ConstraintViolationException violacao
-                    && "uk_usuarios_email_ignore_case"
-                    .equals(violacao.getConstraintName())) {
-
-                return resposta(HttpStatus.CONFLICT, "CONFLITO_DADOS",
-                        "Email já cadastrado", request, Map.of());
-            }
-
-            causa = causa.getCause();
+        if (OPEN_WORKOUT_UNIQUE_CONSTRAINT.equals(constraintName)) {
+            log.info("Criação de treino rejeitada pela restrição de treino aberto");
+            return resposta(HttpStatus.CONFLICT, "TREINO_ABERTO_EXISTENTE",
+                    "Você já possui um treino em andamento ou pausado.", request, Map.of());
         }
-        throw exception;
+
+        if (EMAIL_UNIQUE_CONSTRAINT.equals(constraintName)) {
+            return resposta(HttpStatus.CONFLICT, "CONFLITO_DADOS",
+                    "Email já cadastrado", request, Map.of());
+        }
+
+        log.error("Violação de integridade não reconhecida ao processar {} {}",
+                request.getMethod(), request.getRequestURI(), exception);
+        return resposta(HttpStatus.INTERNAL_SERVER_ERROR, "ERRO_INTERNO",
+                "Ocorreu um erro interno no servidor.", request, Map.of());
     }
 
     @ExceptionHandler(Exception.class)
@@ -93,6 +96,18 @@ public class GlobalExceptionHandler {
 
     private String mensagemDoCampo(FieldError error) {
         return error.getDefaultMessage() == null ? "Valor inválido." : error.getDefaultMessage();
+    }
+
+    private String constraintName(Throwable exception) {
+        Throwable cause = exception;
+        while (cause != null) {
+            if (cause instanceof ConstraintViolationException violation
+                    && violation.getConstraintName() != null) {
+                return violation.getConstraintName();
+            }
+            cause = cause.getCause();
+        }
+        return null;
     }
 
     private ResponseEntity<ErroResponse> resposta(

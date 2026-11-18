@@ -86,33 +86,24 @@ class TreinoServiceCreateTest {
         assertSame(aluno, mapped.getAluno());
         assertSame(rotina, mapped.getRotinaOrigem());
         assertEquals(StatusTreino.EM_ANDAMENTO, mapped.getStatus());
+        verify(repository).existsByAluno_IdAndStatusIn(ALUNO_ID,
+                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO));
         verify(repository).save(mapped);
     }
 
     @Test
-    void rejectsWhenWorkoutIsInProgressAndDoesNotMapOrSave() {
-        rejectsOpenWorkout(StatusTreino.EM_ANDAMENTO);
-    }
-
-    @Test
-    void rejectsWhenWorkoutIsPausedAndDoesNotMapOrSave() {
-        rejectsOpenWorkout(StatusTreino.PAUSADO);
-    }
-
-    @Test
-    void createsWhenOnlyFinishedWorkoutsExist() {
-        Treino mapped = new Treino();
-        TreinoResponse response = new TreinoResponse(2L, ROTINA_ID, "Rotina A", null, null,
-                StatusTreino.EM_ANDAMENTO, null);
+    void rejectsWhenAnOpenWorkoutExistsAndDoesNotMapOrSave() {
         when(repository.existsByAluno_IdAndStatusIn(ALUNO_ID,
-                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO))).thenReturn(false);
-        when(mapper.toEntity(REQUEST)).thenReturn(mapped);
-        when(repository.save(mapped)).thenReturn(mapped);
-        when(mapper.toResponse(mapped)).thenReturn(response);
+                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO))).thenReturn(true);
 
-        assertSame(response, service.create(EMAIL, REQUEST));
-        verify(mapper).toEntity(REQUEST);
-        verify(repository).save(mapped);
+        RegraNegocioException exception = assertThrows(RegraNegocioException.class,
+                () -> service.create(EMAIL, REQUEST));
+
+        assertEquals("Você já possui um treino em andamento ou pausado.", exception.getMessage());
+        verify(repository).existsByAluno_IdAndStatusIn(ALUNO_ID,
+                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO));
+        verify(mapper, never()).toEntity(any());
+        verify(repository, never()).save(any());
     }
 
     @Test
@@ -136,17 +127,5 @@ class TreinoServiceCreateTest {
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         verifyNoInteractions(mapper, repository);
-    }
-
-    private void rejectsOpenWorkout(StatusTreino status) {
-        when(repository.existsByAluno_IdAndStatusIn(ALUNO_ID,
-                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO))).thenReturn(true);
-
-        RegraNegocioException exception = assertThrows(RegraNegocioException.class,
-                () -> service.create(EMAIL, REQUEST));
-
-        assertEquals("Você já possui um treino em andamento ou pausado.", exception.getMessage());
-        verify(mapper, never()).toEntity(any());
-        verify(repository, never()).save(any());
     }
 }
