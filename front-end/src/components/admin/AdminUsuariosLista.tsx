@@ -1,4 +1,4 @@
-import { Mail, Power, Trash2, UserRound } from "lucide-react"
+import { Mail, Power, UserRound } from "lucide-react"
 
 import type { UsuarioMock } from "../../mocks/usuarios-mock"
 
@@ -7,13 +7,11 @@ export default function AdminUsuariosLista({
     usuarioAtualId,
     onCodigo,
     onStatus,
-    onRemover,
 }: {
     usuarios: UsuarioMock[]
     usuarioAtualId: number
     onCodigo: (item: UsuarioMock) => void
     onStatus: (item: UsuarioMock) => void
-    onRemover: (item: UsuarioMock) => void
 }) {
     return (
         <section className="mt-5 grid gap-4 lg:grid-cols-2">
@@ -70,16 +68,6 @@ export default function AdminUsuariosLista({
                             >
                                 <Power size={17} />
                             </button>
-                            {item.tipo === "ALUNO" && (
-                                <button
-                                    type="button"
-                                    onClick={() => onRemover(item)}
-                                    title="Remover aluno"
-                                    className="rounded-lg p-2 text-rose-600 transition hover:bg-rose-50 dark:hover:bg-rose-950"
-                                >
-                                    <Trash2 size={17} />
-                                </button>
-                            )}
                         </div>
                     </div>
                 </article>

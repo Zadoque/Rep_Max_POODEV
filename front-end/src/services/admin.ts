@@ -80,19 +80,6 @@ export async function alterarStatusUsuarioAdmin(
     return atualizado
 }
 
-export async function removerAlunoAdmin(usuarioId: number): Promise<void> {
-    exigirMock()
-    const usuarios = lerUsuariosAdminMock()
-    const usuario = usuarios.find((item) => item.id === usuarioId)
-    if (!usuario || usuario.tipo !== "ALUNO") throw new Error("Somente alunos podem ser removidos")
-
-    localStorage.setItem(
-        CHAVE_USUARIOS,
-        JSON.stringify(usuarios.filter((item) => item.id !== usuarioId)),
-    )
-    // API futura: DELETE /api/usuarios/{id}
-}
-
 export async function enviarCodigoRedefinicaoAdmin(usuario: UsuarioMock): Promise<void> {
     exigirMock()
     console.info(`[MOCK] Código de redefinição enviado para ${usuario.email}`)

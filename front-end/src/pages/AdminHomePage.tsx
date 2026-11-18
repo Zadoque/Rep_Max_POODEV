@@ -15,7 +15,6 @@ import {
     buscarUsuariosAdmin,
     cadastrarUsuarioAdmin,
     enviarCodigoRedefinicaoAdmin,
-    removerAlunoAdmin,
     removerExercicioAdmin,
     salvarExercicioAdmin,
 } from "../services/admin"
@@ -80,12 +79,6 @@ export default function AdminHomePage() {
         const atualizado = await alterarStatusUsuarioAdmin(item.id, !item.ativo)
         setUsuarios((atuais) => atuais.map((atual) => (atual.id === item.id ? atualizado : atual)))
         mostrarMensagem(`Conta de ${item.nome} ${atualizado.ativo ? "ativada" : "desativada"}.`)
-    }
-    async function removerAluno(item: UsuarioMock) {
-        if (!window.confirm(`Remover o aluno ${item.nome}?`)) return
-        await removerAlunoAdmin(item.id)
-        setUsuarios((atuais) => atuais.filter((atual) => atual.id !== item.id))
-        mostrarMensagem("Aluno removido do sistema.")
     }
     async function enviarCodigo(item: UsuarioMock) {
         await enviarCodigoRedefinicaoAdmin(item)
@@ -172,7 +165,6 @@ export default function AdminHomePage() {
                         usuarioAtualId={usuario.id}
                         onCodigo={enviarCodigo}
                         onStatus={alternarStatus}
-                        onRemover={removerAluno}
                     />
                 ) : (
                     <AdminExerciciosLista
