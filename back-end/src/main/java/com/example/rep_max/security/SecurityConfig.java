@@ -137,6 +137,18 @@ public class SecurityConfig {
                         )
                         .hasAnyRole("ALUNO", "ADMIN")
 
+                        .requestMatchers(HttpMethod.POST, "/treinos")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/treinos", "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
 
 
                         .anyRequest()

@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemRotinaTreinoService {
+public class ItemRotinaService {
 
     private final ItemRotinaRepository repository;
     private final ItemRotinaMapper mapper;

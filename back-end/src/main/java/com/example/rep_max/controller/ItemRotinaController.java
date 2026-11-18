@@ -3,7 +3,7 @@ package com.example.rep_max.controller;
 
 import com.example.rep_max.DTO.request.ItemRotinaRequest;
 import com.example.rep_max.DTO.response.ItemRotinaResponse;
-import com.example.rep_max.service.ItemRotinaTreinoService;
+import com.example.rep_max.service.ItemRotinaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/rotinas/{rotinaId}/itens")
 public class ItemRotinaController {
 
-    private final ItemRotinaTreinoService service;
+    private final ItemRotinaService service;
     @PostMapping
     public ResponseEntity<ItemRotinaResponse> create(Authentication authentication,
                                                      @Valid @RequestBody ItemRotinaRequest request,
