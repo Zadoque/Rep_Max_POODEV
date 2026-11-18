@@ -82,6 +82,100 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/{id}")
                         .hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST,  "/exercicios")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/exercicios/{id}",
+                                "/exercicios")
+                        .hasAnyRole("ALUNO","ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/exercicios/{id}")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/exercicios/{id}")
+                        .hasRole("ADMIN")
+
+
+                        .requestMatchers(HttpMethod.POST,  "/rotinas")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/rotinas/{id}",
+                                "/rotinas")
+                        .hasAnyRole("ALUNO","ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/rotinas/{id}")
+                        .hasAnyRole("ADMIN", "ALUNO")
+
+                        .requestMatchers(HttpMethod.PUT, "/rotinas/{id}")
+                        .hasAnyRole("ADMIN", "ALUNO")
+
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/rotinas/{rotinaId}/itens"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/rotinas/{rotinaId}/itens",
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/rotinas/{rotinaId}/itens/{itemId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/treinos")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/treinos", "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.PUT, "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(HttpMethod.DELETE, "/treinos/{treinoId}")
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/treinos/{treinoId}/series"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/treinos/{treinoId}/series",
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+
+
                         .anyRequest()
                         .denyAll()
                 )

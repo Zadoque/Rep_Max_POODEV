@@ -38,7 +38,7 @@ public class RotinaTreino {
     private String nome;
 
     @Column(nullable = false)
-    private boolean ativa;
+    private boolean ativa = true;
 
     @OneToMany(mappedBy = "rotina", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("ordem ASC")
