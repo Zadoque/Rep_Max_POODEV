@@ -4,6 +4,7 @@ import com.example.rep_max.DTO.mapper.SerieExecutadaMapper;
 import com.example.rep_max.DTO.request.SerieExecutadaRequest;
 import com.example.rep_max.DTO.response.SerieExecutadaResponse;
 import com.example.rep_max.entity.*;
+import com.example.rep_max.exception.RegraNegocioException;
 import com.example.rep_max.repository.ExercicioRepository;
 import com.example.rep_max.repository.SerieExecutadaRepository;
 import com.example.rep_max.repository.TreinoRepository;
@@ -136,10 +137,7 @@ public class SerieExecutadaService {
 
     private void exigirEmAndamento(Treino treino) {
         if (treino.getStatus() != StatusTreino.EM_ANDAMENTO) {
-            throw new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "O treino precisa estar em andamento"
-            );
+            throw new RegraNegocioException("O treino precisa estar em andamento");
         }
     }
 }

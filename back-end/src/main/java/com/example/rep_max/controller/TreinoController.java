@@ -78,4 +78,28 @@ public class TreinoController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{treinoId}/pause")
+    public ResponseEntity<Void> pause(@PathVariable Long treinoId, Authentication authentication) {
+        service.pause(treinoId, authentication.getName());
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @PatchMapping("/{treinoId}/resume")
+    public ResponseEntity<Void> resume(@PathVariable Long treinoId, Authentication authentication) {
+        service.resume(treinoId, authentication.getName());
+
+        return ResponseEntity.noContent().build();
+
+    }
+
+    @PatchMapping("/{treinoId}/finish")
+    public ResponseEntity<Void> finish(@PathVariable Long treinoId, Authentication authentication) {
+        service.finish(treinoId, authentication.getName());
+
+        return ResponseEntity.noContent().build();
+
+    }
 }

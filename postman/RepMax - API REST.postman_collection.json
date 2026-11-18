@@ -1,0 +1,1788 @@
+{
+   "item" : [
+      {
+         "name" : "01 - AutenticaÃ§Ã£o",
+         "item" : [
+            {
+               "request" : {
+                  "description" : "ObtÃ©m CSRF dinÃ¢mico. PÃºblico.",
+                  "method" : "GET",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/auth/csrf"
+               },
+               "name" : "Obter CSRF",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "if(pm.response.code>=200&&pm.response.code<300){try{let j=pm.response.json();if(j.token)pm.environment.set('csrfToken',j.token)}catch(e){}}",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/auth/login",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/x-www-form-urlencoded"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "method" : "POST",
+                  "body" : {
+                     "urlencoded" : [
+                        {
+                           "value" : "{{emailAluno}}",
+                           "key" : "email"
+                        },
+                        {
+                           "value" : "{{senhaAluno}}",
+                           "key" : "senha"
+                        }
+                     ],
+                     "mode" : "urlencoded"
+                  },
+                  "description" : "Form login; preencha emailAluno/senhaAluno. JSESSIONID Ã© gerenciado pelo Postman."
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Login - aluno"
+            },
+            {
+               "name" : "Login - administrador",
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "description" : "Form login; preencha emailAdmin/senhaAdmin. Use sessÃ£o isolada.",
+                  "body" : {
+                     "urlencoded" : [
+                        {
+                           "value" : "{{emailAdmin}}",
+                           "key" : "email"
+                        },
+                        {
+                           "value" : "{{senhaAdmin}}",
+                           "key" : "senha"
+                        }
+                     ],
+                     "mode" : "urlencoded"
+                  },
+                  "method" : "POST",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/x-www-form-urlencoded"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/auth/login"
+               }
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/usuarios/me",
+                  "header" : [],
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "GET"
+               },
+               "name" : "Consultar usuÃ¡rio autenticado",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "description" : "Encerra sessÃ£o.",
+                  "method" : "POST",
+                  "header" : [
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/auth/logout"
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Logout"
+            },
+            {
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Cadastrar usuÃ¡rio",
+               "request" : {
+                  "body" : {
+                     "mode" : "raw",
+                     "raw" : "{\"senha\":\"TroqueEstaSenha123\",\"email\":\"aluno.local@example.com\",\"nome\":\"Aluno DemonstraÃÂ§ÃÂ£o\"}",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "Cadastro pÃºblico.",
+                  "method" : "POST",
+                  "url" : "{{baseUrl}}/auth/register",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               }
+            }
+         ]
+      },
+      {
+         "name" : "02 - UsuÃ¡rios",
+         "item" : [
+            {
+               "name" : "Listar usuÃ¡rios",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ADMIN.",
+                  "url" : "{{baseUrl}}/usuarios",
+                  "header" : []
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Consultar usuÃ¡rio",
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ADMIN.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/usuarios/1"
+               }
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/usuarios/me",
+                  "header" : [],
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN."
+               },
+               "name" : "Consultar meu usuÃ¡rio",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Desativar usuÃ¡rio por ID (nÃ£o executar automaticamente)",
+               "request" : {
+                  "url" : "{{baseUrl}}/usuarios/1",
+                  "header" : [
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "description" : "ADMIN; destrutivo.",
+                  "method" : "DELETE"
+               }
+            },
+            {
+               "name" : "Desativar minha conta (nÃ£o executar automaticamente)",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/usuarios/me",
+                  "method" : "DELETE",
+                  "description" : "ALUNO ou ADMIN; destrutivo."
+               }
+            }
+         ]
+      },
+      {
+         "item" : [
+            {
+               "request" : {
+                  "body" : {
+                     "mode" : "raw",
+                     "raw" : "{\"grupoMuscular\":\"PEITO\",\"urlMidia\":\"https://example.com/supino\",\"descricao\":\"ExercÃÂ­cio para peitoral.\",\"instrucoesExecucao\":\"Executar com controle.\",\"nome\":\"Supino Reto DemonstraÃÂ§ÃÂ£o\"}",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "ADMIN. GrupoMuscular: PEITO, COSTAS, OMBROS, BICEPS, TRICEPS, QUADRICEPS, POSTERIOR_COXA, GLUTEOS, PANTURRILHAS, ABDOMEN.",
+                  "method" : "POST",
+                  "url" : "{{baseUrl}}/exercicios",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               },
+               "name" : "Criar exercÃ­cio",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN.",
+                  "url" : "{{baseUrl}}/exercicios",
+                  "header" : []
+               },
+               "name" : "Listar exercÃ­cios",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "header" : [],
+                  "url" : "{{baseUrl}}/exercicios/{{exercicioId}}",
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "GET"
+               },
+               "name" : "Consultar exercÃ­cio",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "method" : "PUT",
+                  "body" : {
+                     "raw" : "{\"grupoMuscular\":\"PEITO\",\"urlMidia\":\"https://example.com/supino\",\"descricao\":\"ExercÃÂ­cio para peitoral.\",\"instrucoesExecucao\":\"Executar com controle.\",\"nome\":\"Supino Reto DemonstraÃÂ§ÃÂ£o\"}",
+                     "mode" : "raw",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "ADMIN.",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/exercicios/{{exercicioId}}"
+               },
+               "name" : "Atualizar exercÃ­cio",
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/exercicios/{{exercicioId}}",
+                  "description" : "ADMIN; destrutivo.",
+                  "method" : "DELETE"
+               },
+               "name" : "Desativar exercÃ­cio (nÃ£o executar automaticamente)",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            }
+         ],
+         "name" : "03 - ExercÃ­cios"
+      },
+      {
+         "item" : [
+            {
+               "request" : {
+                  "description" : "ALUNO ou ADMIN.",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"nome\":\"Upper A\"}"
+                  },
+                  "method" : "POST",
+                  "url" : "{{baseUrl}}/rotinas",
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               },
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Criar rotina"
+            },
+            {
+               "name" : "Listar rotinas",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN.",
+                  "url" : "{{baseUrl}}/rotinas",
+                  "header" : []
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Consultar rotina",
+               "request" : {
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "GET",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}"
+               }
+            },
+            {
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}",
+                  "method" : "PUT",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"nome\":\"Upper A Atualizada\"}",
+                     "mode" : "raw"
+                  },
+                  "description" : "ALUNO ou ADMIN."
+               },
+               "name" : "Atualizar rotina",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Desativar rotina (nÃ£o executar automaticamente)",
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}",
+                  "description" : "ALUNO ou ADMIN; destrutivo.",
+                  "method" : "DELETE"
+               }
+            }
+         ],
+         "name" : "04 - Rotinas de Treino"
+      },
+      {
+         "item" : [
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens",
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "method" : "POST",
+                  "body" : {
+                     "raw" : "{\"ordem\":1,\"exercicioId\":\"{{exercicioId}}\",\"quantidadeSeries\":3}",
+                     "mode" : "raw",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "ordem Ãºnica na rotina."
+               },
+               "name" : "Adicionar item",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ]
+            },
+            {
+               "name" : "Listar itens",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens"
+               }
+            },
+            {
+               "name" : "Consultar item",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens/{{itemId}}"
+               }
+            },
+            {
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens/{{itemId}}",
+                  "description" : "ALUNO ou ADMIN.",
+                  "body" : {
+                     "raw" : "{\"ordem\":1,\"exercicioId\":\"{{exercicioId}}\",\"quantidadeSeries\":4}",
+                     "mode" : "raw",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "method" : "PUT"
+               },
+               "name" : "Atualizar item",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "method" : "DELETE",
+                  "description" : "destrutivo.",
+                  "header" : [
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens/{{itemId}}"
+               },
+               "name" : "Excluir item (nÃ£o executar automaticamente)",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     }
+                  }
+               ]
+            }
+         ],
+         "name" : "05 - Itens da Rotina"
+      },
+      {
+         "name" : "06 - Treinos",
+         "item" : [
+            {
+               "request" : {
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"rotinaOrigemId\":\"{{rotinaId}}\",\"observacoes\":\"Treino Upper A\"}"
+                  },
+                  "method" : "POST",
+                  "description" : "rotina ativa pertencente ao aluno.",
+                  "url" : "{{baseUrl}}/treinos",
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               },
+               "name" : "Iniciar treino",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Listar treinos",
+               "request" : {
+                  "header" : [],
+                  "url" : "{{baseUrl}}/treinos",
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "GET"
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Consultar treino",
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}"
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Atualizar treino",
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"observacoes\":\"Treino atualizado\"}",
+                     "mode" : "raw"
+                  },
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "PUT"
+               }
+            },
+            {
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}",
+                  "description" : "destrutivo.",
+                  "method" : "DELETE"
+               },
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Excluir treino (nÃ£o executar automaticamente)"
+            }
+         ]
+      },
+      {
+         "item" : [
+            {
+               "request" : {
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"numeroSerie\":1,\"exercicioId\":\"{{exercicioId}}\",\"ordemExecucao\":1,\"cargaKg\":70,\"repeticoes\":8}"
+                  },
+                  "description" : "ordemExecucao Ãºnica.",
+                  "method" : "POST",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series"
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Registrar sÃ©rie"
+            },
+            {
+               "name" : "Listar sÃ©ries ordenadas",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "request" : {
+                  "header" : [],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "method" : "GET",
+                  "description" : "ALUNO ou ADMIN; validar ordemExecucao."
+               }
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series/{{serieId}}",
+                  "header" : [],
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "GET"
+               },
+               "name" : "Consultar sÃ©rie",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series/{{serieId}}",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"repeticoes\":10,\"cargaKg\":72.5,\"ordemExecucao\":1,\"numeroSerie\":1,\"exercicioId\":\"{{exercicioId}}\"}"
+                  },
+                  "description" : "ALUNO ou ADMIN.",
+                  "method" : "PUT"
+               },
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Atualizar sÃ©rie"
+            },
+            {
+               "name" : "Excluir sÃ©rie (nÃ£o executar automaticamente)",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series/{{serieId}}",
+                  "header" : [
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "method" : "DELETE",
+                  "description" : "destrutivo."
+               }
+            }
+         ],
+         "name" : "07 - SÃ©ries Executadas"
+      },
+      {
+         "item" : [
+            {
+               "request" : {
+                  "description" : "ObtÃ©m CSRF dinÃ¢mico. PÃºblico.",
+                  "method" : "GET",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/auth/csrf"
+               },
+               "name" : "Obter CSRF",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "if(pm.response.code>=200&&pm.response.code<300){try{let j=pm.response.json();if(j.token)pm.environment.set('csrfToken',j.token)}catch(e){}}",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "name" : "Login - administrador",
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "description" : "Form login; preencha emailAdmin/senhaAdmin. Use sessÃ£o isolada.",
+                  "body" : {
+                     "urlencoded" : [
+                        {
+                           "value" : "{{emailAdmin}}",
+                           "key" : "email"
+                        },
+                        {
+                           "value" : "{{senhaAdmin}}",
+                           "key" : "senha"
+                        }
+                     ],
+                     "mode" : "urlencoded"
+                  },
+                  "method" : "POST",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/x-www-form-urlencoded"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/auth/login"
+               }
+            },
+            {
+               "request" : {
+                  "description" : "ObtÃ©m CSRF dinÃ¢mico. PÃºblico.",
+                  "method" : "GET",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/auth/csrf"
+               },
+               "name" : "Obter CSRF",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "if(pm.response.code>=200&&pm.response.code<300){try{let j=pm.response.json();if(j.token)pm.environment.set('csrfToken',j.token)}catch(e){}}",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "name" : "Criar exercÃ­cio 1",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/exercicios",
+                  "method" : "POST",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"grupoMuscular\":\"PEITO\",\"urlMidia\":\"https://example.com/supino\",\"descricao\":\"ExercÃÂ­cio para peitoral.\",\"instrucoesExecucao\":\"Executar com controle.\",\"nome\":\"Supino Reto DemonstraÃÂ§ÃÂ£o\"}",
+                     "mode" : "raw"
+                  },
+                  "description" : "ADMIN."
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Criar exercÃ­cio 2",
+               "request" : {
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"descricao\":\"ExercÃÂ­cio para peitoral.\",\"urlMidia\":\"https://example.com/supino\",\"nome\":\"Remada Curvada DemonstraÃÂ§ÃÂ£o\",\"instrucoesExecucao\":\"Executar com controle.\",\"grupoMuscular\":\"COSTAS\"}",
+                     "mode" : "raw"
+                  },
+                  "description" : "ADMIN.",
+                  "method" : "POST",
+                  "url" : "{{baseUrl}}/exercicios",
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ]
+               }
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/auth/login",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/x-www-form-urlencoded"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "method" : "POST",
+                  "body" : {
+                     "urlencoded" : [
+                        {
+                           "value" : "{{emailAluno}}",
+                           "key" : "email"
+                        },
+                        {
+                           "value" : "{{senhaAluno}}",
+                           "key" : "senha"
+                        }
+                     ],
+                     "mode" : "urlencoded"
+                  },
+                  "description" : "Form login; preencha emailAluno/senhaAluno. JSESSIONID Ã© gerenciado pelo Postman."
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 204',()=>pm.response.to.have.status(204));",
+                           ""
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Login - aluno"
+            },
+            {
+               "request" : {
+                  "description" : "ObtÃ©m CSRF dinÃ¢mico. PÃºblico.",
+                  "method" : "GET",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/auth/csrf"
+               },
+               "name" : "Obter CSRF",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "if(pm.response.code>=200&&pm.response.code<300){try{let j=pm.response.json();if(j.token)pm.environment.set('csrfToken',j.token)}catch(e){}}",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Criar rotina da demonstraÃ§Ã£o",
+               "request" : {
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"nome\":\"Treino Upper A - DemonstraÃÂ§ÃÂ£o\"}"
+                  },
+                  "description" : "ALUNO.",
+                  "method" : "POST",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas"
+               }
+            },
+            {
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens",
+                  "description" : "ordem 1.",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"ordem\":1,\"exercicioId\":\"{{exercicioId}}\",\"quantidadeSeries\":3}",
+                     "mode" : "raw"
+                  },
+                  "method" : "POST"
+               },
+               "name" : "Adicionar exercÃ­cio 1",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "name" : "Adicionar exercÃ­cio 2",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens",
+                  "body" : {
+                     "mode" : "raw",
+                     "raw" : "{\"ordem\":2,\"exercicioId\":\"{{exercicioId2}}\",\"quantidadeSeries\":2}",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "ordem 2 evita duplicidade.",
+                  "method" : "POST"
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Listar itens da rotina",
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/rotinas/{{rotinaId}}/itens"
+               }
+            },
+            {
+               "request" : {
+                  "method" : "POST",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"rotinaOrigemId\":\"{{rotinaId}}\",\"observacoes\":\"DemonstraÃÂ§ÃÂ£o\"}",
+                     "mode" : "raw"
+                  },
+                  "description" : "ALUNO.",
+                  "url" : "{{baseUrl}}/treinos",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Iniciar treino EM_ANDAMENTO"
+            },
+            {
+               "request" : {
+                  "description" : "ALUNO.",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"ordemExecucao\":1,\"exercicioId\":\"{{exercicioId}}\",\"numeroSerie\":1,\"repeticoes\":9,\"cargaKg\":45}"
+                  },
+                  "method" : "POST",
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               },
+               "name" : "Registrar sÃ©rie 1",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "request" : {
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "body" : {
+                     "mode" : "raw",
+                     "raw" : "{\"ordemExecucao\":2,\"numeroSerie\":2,\"exercicioId\":\"{{exercicioId}}\",\"repeticoes\":8,\"cargaKg\":50}",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "method" : "POST",
+                  "description" : "ALUNO."
+               },
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ],
+               "name" : "Registrar sÃ©rie 2"
+            },
+            {
+               "name" : "Registrar sÃ©rie 3",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "request" : {
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "value" : "{{csrfToken}}",
+                        "key" : "X-CSRF-TOKEN"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"cargaKg\":55,\"repeticoes\":7,\"numeroSerie\":3,\"exercicioId\":\"{{exercicioId}}\",\"ordemExecucao\":3}",
+                     "mode" : "raw"
+                  },
+                  "method" : "POST",
+                  "description" : "ALUNO."
+               }
+            },
+            {
+               "request" : {
+                  "method" : "POST",
+                  "body" : {
+                     "raw" : "{\"cargaKg\":60,\"repeticoes\":6,\"numeroSerie\":1,\"exercicioId\":\"{{exercicioId2}}\",\"ordemExecucao\":4}",
+                     "mode" : "raw",
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     }
+                  },
+                  "description" : "ALUNO.",
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series"
+               },
+               "name" : "Registrar sÃ©rie 4",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 201',()=>pm.response.to.have.status(201));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Registrar sÃ©rie 5",
+               "request" : {
+                  "header" : [
+                     {
+                        "value" : "application/json",
+                        "key" : "Content-Type"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "raw" : "{\"ordemExecucao\":5,\"numeroSerie\":2,\"exercicioId\":\"{{exercicioId2}}\",\"repeticoes\":5,\"cargaKg\":65}",
+                     "mode" : "raw"
+                  },
+                  "method" : "POST",
+                  "description" : "ALUNO."
+               }
+            },
+            {
+               "name" : "Consultar sÃ©ries ordenadas",
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "request" : {
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series",
+                  "header" : [],
+                  "method" : "GET",
+                  "description" : "ALUNO."
+               }
+            },
+            {
+               "event" : [
+                  {
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     },
+                     "listen" : "test"
+                  }
+               ],
+               "name" : "Atualizar carga da sÃ©rie",
+               "request" : {
+                  "body" : {
+                     "options" : {
+                        "raw" : {
+                           "language" : "json"
+                        }
+                     },
+                     "mode" : "raw",
+                     "raw" : "{\"numeroSerie\":3,\"exercicioId\":\"{{exercicioId}}\",\"ordemExecucao\":3,\"cargaKg\":82.5,\"repeticoes\":6}"
+                  },
+                  "description" : "persistÃªncia.",
+                  "method" : "PUT",
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series/{{serieId}}",
+                  "header" : [
+                     {
+                        "key" : "Content-Type",
+                        "value" : "application/json"
+                     },
+                     {
+                        "key" : "X-CSRF-TOKEN",
+                        "value" : "{{csrfToken}}"
+                     }
+                  ]
+               }
+            },
+            {
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/treinos/{{treinoId}}/series/{{serieId}}"
+               },
+               "name" : "Consultar sÃ©rie persistida",
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ],
+                        "type" : "text/javascript"
+                     }
+                  }
+               ]
+            },
+            {
+               "event" : [
+                  {
+                     "listen" : "test",
+                     "script" : {
+                        "type" : "text/javascript",
+                        "exec" : [
+                           "pm.test('Status esperado: 200',()=>pm.response.to.have.status(200));",
+                           "if(pm.response.code!==204){let j=pm.response.json(); pm.test('Resposta JSON vÃ¡lido',()=>pm.expect(j).to.be.an('object'));}"
+                        ]
+                     }
+                  }
+               ],
+               "name" : "Listar treinos do aluno",
+               "request" : {
+                  "method" : "GET",
+                  "description" : "ALUNO.",
+                  "header" : [],
+                  "url" : "{{baseUrl}}/treinos"
+               }
+            }
+         ],
+         "name" : "08 - DEMONSTRAÃÃO COMPLETA"
+      }
+   ],
+   "info" : {
+      "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description" : "ColeÃ§Ã£o baseada nos Controllers, DTOs e SecurityConfig atuais. Inicie Docker/backend conforme README, preencha o ambiente e execute CSRF antes e apÃ³s login. Postman gerencia JSESSIONID. Login usa email e senha em application/x-www-form-urlencoded. Alterne sessÃµes ADMIN/ALUNO. A demonstraÃ§Ã£o nÃ£o exclui dados, evita ordens duplicadas e termina em EM_ANDAMENTO; nÃ£o existem endpoints de pausar, retomar ou finalizar.",
+      "name" : "RepMax - API REST"
+   }
+}

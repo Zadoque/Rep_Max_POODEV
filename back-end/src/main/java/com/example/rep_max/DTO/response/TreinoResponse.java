@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record TreinoResponse(
         Long id,
         Long rotinaOrigemId,
+        String rotinaOrigemNome,
         LocalDateTime inicio,
         LocalDateTime fim,
         StatusTreino status,

@@ -8,6 +8,7 @@ import com.example.rep_max.entity.RotinaTreino;
 import com.example.rep_max.entity.StatusTreino;
 import com.example.rep_max.entity.Treino;
 import com.example.rep_max.entity.Usuario;
+import com.example.rep_max.exception.RegraNegocioException;
 import com.example.rep_max.repository.RotinaTreinoRepository;
 import com.example.rep_max.repository.TreinoRepository;
 import com.example.rep_max.repository.UsuarioRepository;
@@ -94,6 +95,36 @@ public class TreinoService {
         mapper.updateEntity(request, treino);
 
         return mapper.toResponse(treino);
+    }
+    @Transactional
+    public void pause(Long treinoId, String email){
+        Treino treino = buscarTreinoDoAluno(treinoId, email);
+        if (treino.getStatus() != StatusTreino.EM_ANDAMENTO) {
+            throw new RegraNegocioException("Somente treinos em andamento podem ser pausados.");
+        }
+        treino.setStatus(StatusTreino.PAUSADO);
+
+    }
+
+    @Transactional
+    public void resume(Long treinoId, String email) {
+        Treino treino = buscarTreinoDoAluno(treinoId, email);
+        if (treino.getStatus() != StatusTreino.PAUSADO) {
+            throw new RegraNegocioException("Somente treinos pausados podem ser retomados.");
+        }
+        treino.setStatus(StatusTreino.EM_ANDAMENTO);
+    }
+
+    @Transactional
+    public void finish(Long treinoId, String email) {
+        Treino treino = buscarTreinoDoAluno(treinoId, email);
+        if (treino.getStatus() != StatusTreino.EM_ANDAMENTO
+                && treino.getStatus() != StatusTreino.PAUSADO) {
+            throw new RegraNegocioException
+                    ("Somente treinos pausados ou em andamento podem ser finalizados.");
+        }
+        treino.setFim(LocalDateTime.now());
+        treino.setStatus(StatusTreino.FINALIZADO);
     }
 
     // Método auxiliar para evitar repetir a mesma consulta
