@@ -5,6 +5,7 @@ import com.example.rep_max.entity.Treino;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,11 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
     Optional<Treino> findByIdAndAluno_EmailIgnoreCase(Long id, String email);
 
     List<Treino> findAllByAluno_EmailIgnoreCaseAndStatus(StatusTreino statusTreino, String email);
+
+    boolean existsByAluno_IdAndStatusIn(
+            Long alunoId,
+            Collection<StatusTreino> status
+    );
 
 
 

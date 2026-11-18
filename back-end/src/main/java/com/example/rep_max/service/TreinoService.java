@@ -44,6 +44,17 @@ public class TreinoService {
                         HttpStatus.NOT_FOUND,
                         "Rotina não encontrada"));
 
+
+        boolean possuiTreinoAberto = repository.existsByAluno_IdAndStatusIn(
+                usuario.getId(),
+                List.of(StatusTreino.EM_ANDAMENTO, StatusTreino.PAUSADO)
+        );
+
+        if (possuiTreinoAberto) {
+            throw new RegraNegocioException(
+                    "Você já possui um treino em andamento ou pausado."
+            );
+        }
         Treino treino = mapper.toEntity(request);
         treino.setAluno(usuario);
         treino.setRotinaOrigem(rotinaTreino);
