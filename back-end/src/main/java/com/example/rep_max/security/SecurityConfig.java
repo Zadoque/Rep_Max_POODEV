@@ -149,6 +149,31 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/treinos/{treinoId}")
                         .hasAnyRole("ALUNO", "ADMIN")
 
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/treinos/{treinoId}/series"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/treinos/{treinoId}/series",
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/treinos/{treinoId}/series/{serieId}"
+                        )
+                        .hasAnyRole("ALUNO", "ADMIN")
+
 
 
                         .anyRequest()
