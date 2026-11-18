@@ -7,6 +7,7 @@ interface Props {
     exercicio: ExercicioTreino
     catalogo: ExercicioCatalogo | undefined
     itemAtivo: boolean
+    mostrarSeries?: boolean
     serieLiberada?: (numero: number) => boolean
     onAlterarSerie: (
         numero: number,
@@ -19,6 +20,7 @@ export default function ExercicioExecucaoCard({
     exercicio,
     catalogo,
     itemAtivo,
+    mostrarSeries = true,
     serieLiberada,
     onAlterarSerie,
     onRegistrarSerie,
@@ -41,10 +43,12 @@ export default function ExercicioExecucaoCard({
                         {catalogo?.equipamento ? ` · equipamento: ${catalogo.equipamento}` : ""}
                     </p>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                    {exercicio.series.filter((serie) => serie.concluida).length}/
-                    {exercicio.series.length} séries
-                </span>
+                {mostrarSeries && (
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                        {exercicio.series.filter((serie) => serie.concluida).length}/
+                        {exercicio.series.length} séries
+                    </span>
+                )}
             </div>
 
             {catalogo && (
@@ -53,39 +57,41 @@ export default function ExercicioExecucaoCard({
                 </div>
             )}
 
-            <div className="mt-4 space-y-3">
-                {exercicio.series.map((serie, indice) => (
-                    <SerieExecucaoRow
-                        key={serie.numero}
-                        serie={serie}
-                        bloqueada={
-                            serieLiberada
-                                ? !serieLiberada(serie.numero)
-                                : indice > 0 && !exercicio.series[indice - 1].concluida
-                        }
-                        herdouRepeticoes={
-                            indice > 0 &&
-                            serie.repeticoes === exercicio.series[indice - 1].repeticoes
-                        }
-                        onAlterarRepeticoes={(variacao) =>
-                            onAlterarSerie(serie.numero, {
-                                repeticoes: Math.max(1, serie.repeticoes + variacao),
-                            })
-                        }
-                        onAlterarCarga={(variacao) =>
-                            onAlterarSerie(serie.numero, {
-                                cargaKg: Math.max(0, serie.cargaKg + variacao),
-                            })
-                        }
-                        onDigitarCarga={(valor) =>
-                            onAlterarSerie(serie.numero, {
-                                cargaKg: Number.isFinite(valor) ? valor : 0,
-                            })
-                        }
-                        onRegistrar={() => onRegistrarSerie(serie.numero)}
-                    />
-                ))}
-            </div>
+            {mostrarSeries && (
+                <div className="mt-4 space-y-3">
+                    {exercicio.series.map((serie, indice) => (
+                        <SerieExecucaoRow
+                            key={serie.numero}
+                            serie={serie}
+                            bloqueada={
+                                serieLiberada
+                                    ? !serieLiberada(serie.numero)
+                                    : indice > 0 && !exercicio.series[indice - 1].concluida
+                            }
+                            herdouRepeticoes={
+                                indice > 0 &&
+                                serie.repeticoes === exercicio.series[indice - 1].repeticoes
+                            }
+                            onAlterarRepeticoes={(variacao) =>
+                                onAlterarSerie(serie.numero, {
+                                    repeticoes: Math.max(1, serie.repeticoes + variacao),
+                                })
+                            }
+                            onAlterarCarga={(variacao) =>
+                                onAlterarSerie(serie.numero, {
+                                    cargaKg: Math.max(0, serie.cargaKg + variacao),
+                                })
+                            }
+                            onDigitarCarga={(valor) =>
+                                onAlterarSerie(serie.numero, {
+                                    cargaKg: Number.isFinite(valor) ? valor : 0,
+                                })
+                            }
+                            onRegistrar={() => onRegistrarSerie(serie.numero)}
+                        />
+                    ))}
+                </div>
+            )}
         </article>
     )
 }

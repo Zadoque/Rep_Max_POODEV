@@ -10,7 +10,7 @@ export default function ExecucaoResumo({ nome, concluidas, planejadas, proximo, 
     const percentual = planejadas ? Math.round((concluidas / planejadas) * 100) : 0
 
     return (
-        <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
+        <aside className="w-full min-w-0 space-y-4 lg:sticky lg:top-6 lg:self-start">
             <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-card dark:border-slate-800 dark:bg-slate-900">
                 <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
                     Progresso

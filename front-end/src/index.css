@@ -30,6 +30,38 @@
     text-shadow: 2px 2px 3px rgb(0 0 0 / 85%);
 }
 
+@utility scrollbar-group {
+    scrollbar-color: #10b981 #d1fae5;
+    scrollbar-width: auto;
+}
+
+.dark .scrollbar-group {
+    scrollbar-color: #34d399 #064e3b;
+}
+
+.scrollbar-group::-webkit-scrollbar {
+    height: 10px;
+}
+
+.scrollbar-group::-webkit-scrollbar-track {
+    background: #d1fae5;
+}
+
+.dark .scrollbar-group::-webkit-scrollbar-track {
+    background: #064e3b;
+}
+
+.scrollbar-group::-webkit-scrollbar-thumb {
+    border: 2px solid #d1fae5;
+    border-radius: 9999px;
+    background: #10b981;
+}
+
+.dark .scrollbar-group::-webkit-scrollbar-thumb {
+    border-color: #064e3b;
+    background: #34d399;
+}
+
 @keyframes login-background {
     0% {
         background-position: 0 0;

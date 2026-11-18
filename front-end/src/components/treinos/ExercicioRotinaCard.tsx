@@ -9,6 +9,7 @@ interface Props {
     movimentoAnimado: { itemId?: number; exercicioId?: number; direcao: string } | null
     grupo?: { id: number }
     indice?: number
+    ordem?: number
     onMoverNormal: (id: number, direcao: "cima" | "baixo") => void
     onMoverGrupo: (exercicioId: number, grupoId: number, direcao: "esquerda" | "direita") => void
     onSeries: (id: number, valor: number) => void
@@ -28,6 +29,7 @@ export default function ExercicioRotinaCard({
     onSeries,
     onTrocar,
     onRemover,
+    ordem,
 }: Props) {
     const indice = grupo
         ? (indiceGrupo ?? 0)
@@ -47,6 +49,11 @@ export default function ExercicioRotinaCard({
         <article
             className={`relative min-w-0 flex-1 rounded-2xl border border-slate-200 p-4 pb-14 pt-14 transition-transform duration-200 dark:border-slate-800 ${deslocamento}`}
         >
+            {ordem && (
+                <span className="absolute left-3 top-3 text-xl font-black text-emerald-700 dark:text-emerald-400">
+                    {ordem}º
+                </span>
+            )}
             {grupo ? (
                 <div className="absolute left-3 right-3 top-3 flex items-center justify-between">
                     <button

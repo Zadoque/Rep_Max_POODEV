@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react"
+import { type FormEvent, useEffect, useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router"
 
+import { aplicarRotinaAoTreino, treinoParaRotina } from "../components/execucao/execucao-editor"
 import {
     encontrarProximoItem,
     seriesConcluidas,
@@ -8,15 +9,12 @@ import {
 } from "../components/execucao/execucao-utils"
 import ExecucaoCabecalho from "../components/execucao/ExecucaoCabecalho"
 import ExecucaoTreinoConteudo from "../components/execucao/ExecucaoTreinoConteudo"
+import ModalTreino from "../components/treinos/ModalTreino"
 import { useAutenticacao } from "../hooks/use-autenticacao"
+import { useExecucaoTreino } from "../hooks/use-execucao-treino"
 import { buscarExercicios } from "../services/aluno-dashboard"
-import {
-    atualizarSerie,
-    atualizarStatusTreino,
-    buscarTreinoExecucao,
-    finalizarTreino,
-    salvarTreinoExecucao,
-} from "../services/execucao-treino"
+import { buscarTreinoExecucao } from "../services/execucao-treino"
+import type { RotinaDashboardInput } from "../types/aluno-dashboard"
 import type TreinoResumo from "../types/treino-resumo"
 
 export default function ExecucaoTreinoPage() {
@@ -27,6 +25,7 @@ export default function ExecucaoTreinoPage() {
     const [exercicios, setExercicios] = useState<Awaited<ReturnType<typeof buscarExercicios>>>([])
     const [mensagem, setMensagem] = useState<string | null>(null)
     const [menuAberto, setMenuAberto] = useState(false)
+    const [rotinaEdicao, setRotinaEdicao] = useState<RotinaDashboardInput | null>(null)
     const [carregando, setCarregando] = useState(true)
 
     useEffect(() => {
@@ -46,6 +45,22 @@ export default function ExecucaoTreinoPage() {
         () => (treino ? encontrarProximoItem(treino.itens) : "Carregando treino"),
         [treino],
     )
+
+    const {
+        atualizarExercicio,
+        registrarSerie,
+        registrarSeries,
+        alternarPausa,
+        concluir,
+        persistir,
+    } = useExecucaoTreino({
+        treino,
+        concluidas,
+        planejadas,
+        setTreino,
+        setMensagem,
+        fecharMenu: () => setMenuAberto(false),
+    })
 
     if (carregando) {
         return (
@@ -72,117 +87,18 @@ export default function ExecucaoTreinoPage() {
         )
     }
 
-    async function persistir(atualizado: TreinoResumo, texto: string) {
-        const salvo = await salvarTreinoExecucao(atualizado)
-        setTreino(salvo)
-        setMensagem(texto)
-        window.setTimeout(() => setMensagem(null), 2200)
-    }
-
-    function atualizarExercicio(
-        exercicioId: number,
-        numero: number,
-        alteracoes: { repeticoes?: number; cargaKg?: number },
-    ) {
+    function abrirEdicao() {
         if (!treino) return
-        const itens = treino.itens.map((item) => {
-            if (item.tipoItem === "EXERCICIO" && item.exercicio.id === exercicioId) {
-                return {
-                    ...item,
-                    exercicio: {
-                        ...item.exercicio,
-                        series: item.exercicio.series.map((serie) =>
-                            serie.numero === numero ? atualizarSerie(serie, alteracoes) : serie,
-                        ),
-                    },
-                }
-            }
-            if (item.tipoItem === "TECNICA") {
-                return {
-                    ...item,
-                    exercicios: item.exercicios.map((exercicio) =>
-                        exercicio.id !== exercicioId
-                            ? exercicio
-                            : {
-                                  ...exercicio,
-                                  series: exercicio.series.map((serie) =>
-                                      serie.numero === numero
-                                          ? atualizarSerie(serie, alteracoes)
-                                          : serie,
-                                  ),
-                              },
-                    ),
-                }
-            }
-            return item
-        })
-        setTreino({ ...treino, itens })
-    }
-
-    async function registrarSerie(exercicioId: number, numero: number) {
-        if (!treino) return
-        const itens = treino.itens.map((item) => {
-            if (item.tipoItem === "EXERCICIO" && item.exercicio.id === exercicioId) {
-                const series = item.exercicio.series.map((serie, indice) =>
-                    serie.numero === numero
-                        ? { ...serie, concluida: true }
-                        : indice === numero && !serie.concluida
-                          ? {
-                                ...serie,
-                                repeticoes:
-                                    item.exercicio.series[numero - 1]?.repeticoes ??
-                                    serie.repeticoes,
-                            }
-                          : serie,
-                )
-                return { ...item, exercicio: { ...item.exercicio, series } }
-            }
-            if (item.tipoItem === "TECNICA") {
-                return {
-                    ...item,
-                    exercicios: item.exercicios.map((exercicio) =>
-                        exercicio.id !== exercicioId
-                            ? exercicio
-                            : {
-                                  ...exercicio,
-                                  series: exercicio.series.map((serie, indice) =>
-                                      serie.numero === numero
-                                          ? { ...serie, concluida: true }
-                                          : indice === numero && !serie.concluida
-                                            ? {
-                                                  ...serie,
-                                                  repeticoes:
-                                                      exercicio.series[numero - 1]?.repeticoes ??
-                                                      serie.repeticoes,
-                                              }
-                                            : serie,
-                                  ),
-                              },
-                    ),
-                }
-            }
-            return item
-        })
-        await persistir({ ...treino, itens, status: "EM_ANDAMENTO" }, `Série ${numero} salva`)
-    }
-
-    async function alternarPausa() {
-        if (!treino) return
-        const status = treino.status === "PAUSADO" ? "EM_ANDAMENTO" : "PAUSADO"
-        const atualizado = await atualizarStatusTreino(treino, status)
-        setTreino(atualizado)
-        setMensagem(status === "PAUSADO" ? "Treino pausado" : "Treino retomado")
-    }
-
-    async function concluir() {
-        if (!treino) return
-        const conclusao = concluidas >= planejadas ? "COMPLETA" : "PARCIAL"
-        const atualizado = await finalizarTreino(treino, conclusao)
-        setTreino(atualizado)
-        setMensagem(
-            conclusao === "COMPLETA" ? "Treino concluído" : "Treino finalizado parcialmente",
-        )
+        setRotinaEdicao(treinoParaRotina(treino))
         setMenuAberto(false)
+    }
+
+    async function salvarEdicao(evento: FormEvent<HTMLFormElement>) {
+        evento.preventDefault()
+        if (!treino || !rotinaEdicao) return
+        const atualizado = aplicarRotinaAoTreino(treino, rotinaEdicao, exercicios)
+        await persistir(atualizado, "Treino atualizado")
+        setRotinaEdicao(null)
     }
 
     return (
@@ -195,6 +111,7 @@ export default function ExecucaoTreinoPage() {
                 onPausar={alternarPausa}
                 onRetomar={alternarPausa}
                 onFinalizar={concluir}
+                onEditar={abrirEdicao}
                 onAlternarMenu={() => setMenuAberto((aberto) => !aberto)}
             />
             <ExecucaoTreinoConteudo
@@ -206,7 +123,19 @@ export default function ExecucaoTreinoPage() {
                 mensagem={mensagem}
                 onAlterarSerie={atualizarExercicio}
                 onRegistrarSerie={registrarSerie}
+                onRegistrarGrupoSerie={registrarSeries}
             />
+            {rotinaEdicao && (
+                <ModalTreino
+                    modo="editar"
+                    rotina={rotinaEdicao}
+                    exercicios={exercicios}
+                    atualizadoEm={treino.inicio}
+                    onChange={setRotinaEdicao}
+                    onClose={() => setRotinaEdicao(null)}
+                    onSave={salvarEdicao}
+                />
+            )}
         </div>
     )
 }

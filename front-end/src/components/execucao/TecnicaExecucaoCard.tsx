@@ -1,6 +1,7 @@
 import type { ExercicioCatalogo } from "../../types/exercicio"
 import type { ItemTreinoTecnica } from "../../types/treino-resumo"
 import ExercicioExecucaoCard from "./ExercicioExecucaoCard"
+import SerieExecucaoRow from "./SerieExecucaoRow"
 
 interface Props {
     item: ItemTreinoTecnica
@@ -13,6 +14,7 @@ interface Props {
         alteracoes: { repeticoes?: number; cargaKg?: number },
     ) => void
     onRegistrarSerie: (exercicioId: number, numero: number) => void
+    onRegistrarGrupoSerie: (exercicioIds: number[], numero: number) => void
 }
 
 const rotulos: Record<ItemTreinoTecnica["tipoTecnica"], string> = {
@@ -28,10 +30,20 @@ export default function TecnicaExecucaoCard({
     membroAtivoId,
     onAlterarSerie,
     onRegistrarSerie,
+    onRegistrarGrupoSerie,
 }: Props) {
-    const membrosConcluidos = item.exercicios.filter((exercicio) =>
-        exercicio.series.every((serie) => serie.concluida),
-    ).length
+    const primeiroExercicio = item.exercicios[0]
+    const seriesConcluidas =
+        primeiroExercicio?.series.filter((serie) => serie.concluida).length ?? 0
+    const serieLiberada = (numero: number) =>
+        numero === 1 ||
+        item.exercicios.every((membro) =>
+            membro.series.some((serie) => serie.numero === numero - 1 && serie.concluida),
+        )
+
+    if (!primeiroExercicio) {
+        return null
+    }
 
     return (
         <section className="rounded-3xl border border-emerald-200 bg-emerald-50/50 p-4 shadow-card dark:border-emerald-900 dark:bg-emerald-950/20 sm:p-6">
@@ -41,36 +53,77 @@ export default function TecnicaExecucaoCard({
                         {rotulos[item.tipoTecnica]}
                     </p>
                     <h2 className="mt-1 text-xl font-bold text-slate-950 dark:text-white">
-                        Sequência do grupo
+                        Exercícios do grupo
                     </h2>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
-                        Uma série só completa após todos os {item.exercicios.length} membros.
+                        Faça os exercícios em sequência. As séries são preenchidas uma vez para o
+                        grupo.
                     </p>
                 </div>
                 <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                    {membrosConcluidos}/{item.exercicios.length} membros completos
+                    {seriesConcluidas}/{item.quantidadeSeries} séries do grupo
                 </span>
             </div>
 
-            <div className="mt-5 space-y-4">
+            <div className="scrollbar-group mt-5 flex min-w-0 snap-x gap-4 overflow-x-scroll border-y border-emerald-300 py-3 dark:border-emerald-700">
                 {item.exercicios.map((exercicio) => (
-                    <ExercicioExecucaoCard
+                    <div
                         key={exercicio.id}
-                        exercicio={exercicio}
-                        catalogo={catalogo.find((itemCatalogo) => itemCatalogo.id === exercicio.id)}
-                        itemAtivo={itemAtivo && membroAtivoId === exercicio.id}
-                        serieLiberada={(numero) =>
-                            numero === 1 ||
-                            item.exercicios.every((membro) =>
-                                membro.series.some(
-                                    (serie) => serie.numero === numero - 1 && serie.concluida,
-                                ),
+                        className="w-[min(78vw,20rem)] min-w-[min(78vw,20rem)] snap-start sm:w-80 sm:min-w-80"
+                    >
+                        <ExercicioExecucaoCard
+                            exercicio={exercicio}
+                            catalogo={catalogo.find(
+                                (itemCatalogo) => itemCatalogo.id === exercicio.id,
+                            )}
+                            itemAtivo={itemAtivo && membroAtivoId === exercicio.id}
+                            mostrarSeries={false}
+                            onAlterarSerie={(numero, alteracoes) =>
+                                onAlterarSerie(exercicio.id, numero, alteracoes)
+                            }
+                            onRegistrarSerie={(numero) => onRegistrarSerie(exercicio.id, numero)}
+                        />
+                    </div>
+                ))}
+            </div>
+
+            <div className="mt-3 space-y-3">
+                {primeiroExercicio.series.map((serie, indice) => (
+                    <SerieExecucaoRow
+                        key={serie.numero}
+                        serie={serie}
+                        bloqueada={!serieLiberada(serie.numero)}
+                        herdouRepeticoes={
+                            indice > 0 &&
+                            serie.repeticoes === primeiroExercicio.series[indice - 1].repeticoes
+                        }
+                        onAlterarRepeticoes={(variacao) =>
+                            item.exercicios.forEach((exercicio) =>
+                                onAlterarSerie(exercicio.id, serie.numero, {
+                                    repeticoes: Math.max(1, serie.repeticoes + variacao),
+                                }),
                             )
                         }
-                        onAlterarSerie={(numero, alteracoes) =>
-                            onAlterarSerie(exercicio.id, numero, alteracoes)
+                        onAlterarCarga={(variacao) =>
+                            item.exercicios.forEach((exercicio) =>
+                                onAlterarSerie(exercicio.id, serie.numero, {
+                                    cargaKg: Math.max(0, serie.cargaKg + variacao),
+                                }),
+                            )
                         }
-                        onRegistrarSerie={(numero) => onRegistrarSerie(exercicio.id, numero)}
+                        onDigitarCarga={(valor) =>
+                            item.exercicios.forEach((exercicio) =>
+                                onAlterarSerie(exercicio.id, serie.numero, {
+                                    cargaKg: Number.isFinite(valor) ? valor : 0,
+                                }),
+                            )
+                        }
+                        onRegistrar={() =>
+                            onRegistrarGrupoSerie(
+                                item.exercicios.map((exercicio) => exercicio.id),
+                                serie.numero,
+                            )
+                        }
                     />
                 ))}
             </div>

@@ -43,7 +43,7 @@ export default function ModalTreino({
     )
     return (
         <div
-            className="fixed inset-0 z-30 flex items-center justify-center bg-slate-950/60 p-4 sm:p-6"
+            className="fixed inset-0 z-30 flex items-start justify-center overflow-y-auto bg-slate-950/60 p-3 sm:items-center sm:p-6"
             role="presentation"
             onMouseDown={onClose}
         >
@@ -51,7 +51,7 @@ export default function ModalTreino({
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="titulo-modal-treino"
-                className="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8 dark:bg-slate-900"
+                className="my-3 max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl sm:my-6 sm:max-h-[92vh] sm:p-8 dark:bg-slate-900"
                 onMouseDown={(e) => e.stopPropagation()}
             >
                 <div className="flex items-start justify-between gap-4">
@@ -91,18 +91,18 @@ export default function ModalTreino({
                             Atualizado em {formatarData(atualizadoEm)}
                         </p>
                     )}
-                    <div className="flex justify-end gap-3">
+                    <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-xl px-4 py-2 font-semibold text-slate-600"
+                            className="w-full rounded-xl px-4 py-3 font-semibold text-slate-600 sm:w-auto sm:py-2"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={rotina.itens.length === 0}
-                            className="rounded-xl bg-emerald-600 px-4 py-2 font-bold text-white disabled:opacity-50"
+                            className="w-full rounded-xl bg-emerald-600 px-4 py-3 font-bold text-white disabled:opacity-50 sm:w-auto sm:py-2"
                         >
                             {modo === "criar" ? "Criar treino" : "Salvar alterações"}
                         </button>

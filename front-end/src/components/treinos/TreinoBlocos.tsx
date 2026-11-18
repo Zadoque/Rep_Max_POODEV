@@ -15,7 +15,7 @@ export default function TreinoBlocos({
 }) {
     const normais = rotina.itens.filter((item) => item.tipoItem === "EXERCICIO")
     return (
-        <section>
+        <section className="m-0 w-full">
             <h3 className="text-lg font-bold text-slate-950 dark:text-white">Itens do treino</h3>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Use os botões direcionais para reorganizar exercícios e grupos.
@@ -23,10 +23,7 @@ export default function TreinoBlocos({
             <div className="mt-4 space-y-4">
                 {editor.blocos.map((bloco, indice) =>
                     bloco.tipo === "normal" ? (
-                        <div key={bloco.item.id} className="flex gap-3">
-                            <span className="pt-5 text-xl font-black text-emerald-700 dark:text-emerald-400">
-                                {indice + 1}º
-                            </span>
+                        <div key={bloco.item.id} className="w-[98%]">
                             {(() => {
                                 const exercicio = exercicios.find(
                                     (item) => item.id === bloco.item.exercicioId,
@@ -44,6 +41,7 @@ export default function TreinoBlocos({
                                             editor.setExercicioParaTrocar({ exercicioId: id })
                                         }
                                         onRemover={(id) => editor.removerExercicio(id)}
+                                        ordem={indice + 1}
                                     />
                                 ) : null
                             })()}
@@ -66,6 +64,7 @@ export default function TreinoBlocos({
                             }
                             onRemover={editor.removerExercicio}
                             rotulo={quantidadeTecnica[bloco.item.tipoTecnica].rotulo}
+                            ordem={indice + 1}
                         />
                     ),
                 )}

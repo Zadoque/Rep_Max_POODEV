@@ -21,6 +21,7 @@ interface Props {
     onTrocar: (id: number, grupoId: number) => void
     onRemover: (exercicioId: number, grupoId: number) => void
     rotulo: string
+    ordem: number
 }
 
 export default function GrupoTecnicaCard({
@@ -37,6 +38,7 @@ export default function GrupoTecnicaCard({
     onTrocar,
     onRemover,
     rotulo,
+    ordem,
 }: Props) {
     const botao =
         "rounded-lg border border-slate-300 bg-white px-3 py-0.5 text-xl font-bold leading-none text-emerald-700 transition hover:bg-emerald-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-30 dark:border-slate-700 dark:bg-slate-950 dark:text-emerald-400 dark:hover:bg-emerald-950"
@@ -48,11 +50,11 @@ export default function GrupoTecnicaCard({
             : "translate-y-0"
     const membros = [...bloco.exercicios].sort((a, b) => a.ordemNoGrupo - b.ordemNoGrupo)
     return (
-        <div className={`flex gap-3 transition-transform duration-200 ${movimento}`}>
-            <div className="pt-5 text-xl font-black text-emerald-700 dark:text-emerald-400">
-                {indice + 1}º
-            </div>
-            <div className="relative min-w-0 flex-1 rounded-3xl border border-emerald-200 bg-emerald-50/50 p-4 pb-14 pt-14 dark:border-emerald-900 dark:bg-emerald-950/20">
+        <div className={`w-[98%] transition-transform duration-200 ${movimento}`}>
+            <div className="relative min-w-0 rounded-3xl border border-emerald-200 bg-emerald-50/50 p-4 pb-14 pt-14 dark:border-emerald-900 dark:bg-emerald-950/20">
+                <span className="absolute left-3 top-3 text-xl font-black text-emerald-700 dark:text-emerald-400">
+                    {ordem}º
+                </span>
                 <button
                     type="button"
                     disabled={indice <= 0}
@@ -102,38 +104,42 @@ export default function GrupoTecnicaCard({
                         Grupo vazio. Clique em “+ Exercício” para adicionar.
                     </div>
                 ) : (
-                    <div className="mt-4 flex flex-col gap-3 md:flex-row">
+                    <div className="scrollbar-group mt-4 flex snap-x gap-3 overflow-x-scroll border-y border-emerald-300 py-3 dark:border-emerald-700">
                         {membros.map((membro, indiceMembro) => {
                             const exercicio = exercicios.find(
                                 (opcao) => opcao.id === membro.exercicioId,
                             )
                             return exercicio ? (
-                                <ExercicioRotinaCard
+                                <div
                                     key={membro.exercicioId}
-                                    item={{
-                                        id: membro.exercicioId,
-                                        tipoItem: "EXERCICIO",
-                                        exercicioId: membro.exercicioId,
-                                        quantidadeSeries: bloco.quantidadeSeries,
-                                        tipoTecnica: "NORMAL",
-                                    }}
-                                    exercicio={exercicio}
-                                    itensOrdenados={membros.map((item) => ({
-                                        id: item.exercicioId,
-                                        exercicioId: item.exercicioId,
-                                        quantidadeSeries: bloco.quantidadeSeries,
-                                        tipoTecnica: "NORMAL" as const,
-                                        tipoItem: "EXERCICIO" as const,
-                                    }))}
-                                    movimentoAnimado={movimentoAnimado}
-                                    grupo={{ id: bloco.id }}
-                                    onMoverNormal={onMoverNormal}
-                                    onMoverGrupo={onMoverExercicio}
-                                    onSeries={onSeries}
-                                    onTrocar={(id) => onTrocar(id, bloco.id)}
-                                    onRemover={(id) => onRemover(id, bloco.id)}
-                                    indice={indiceMembro}
-                                />
+                                    className="w-72 min-w-72 snap-start md:flex-1"
+                                >
+                                    <ExercicioRotinaCard
+                                        item={{
+                                            id: membro.exercicioId,
+                                            tipoItem: "EXERCICIO",
+                                            exercicioId: membro.exercicioId,
+                                            quantidadeSeries: bloco.quantidadeSeries,
+                                            tipoTecnica: "NORMAL",
+                                        }}
+                                        exercicio={exercicio}
+                                        itensOrdenados={membros.map((item) => ({
+                                            id: item.exercicioId,
+                                            exercicioId: item.exercicioId,
+                                            quantidadeSeries: bloco.quantidadeSeries,
+                                            tipoTecnica: "NORMAL" as const,
+                                            tipoItem: "EXERCICIO" as const,
+                                        }))}
+                                        movimentoAnimado={movimentoAnimado}
+                                        grupo={{ id: bloco.id }}
+                                        onMoverNormal={onMoverNormal}
+                                        onMoverGrupo={onMoverExercicio}
+                                        onSeries={onSeries}
+                                        onTrocar={(id) => onTrocar(id, bloco.id)}
+                                        onRemover={(id) => onRemover(id, bloco.id)}
+                                        indice={indiceMembro}
+                                    />
+                                </div>
                             ) : null
                         })}
                     </div>

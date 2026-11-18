@@ -1,4 +1,4 @@
-import { ArrowLeft, Check, EllipsisVertical, Pause, Play } from "lucide-react"
+import { ArrowLeft, Check, EllipsisVertical, Pause, Pencil, Play } from "lucide-react"
 
 interface Props {
     nome: string
@@ -8,6 +8,7 @@ interface Props {
     onPausar: () => void
     onRetomar: () => void
     onFinalizar: () => void
+    onEditar: () => void
     onAlternarMenu: () => void
 }
 
@@ -19,6 +20,7 @@ export default function ExecucaoCabecalho({
     onPausar,
     onRetomar,
     onFinalizar,
+    onEditar,
     onAlternarMenu,
 }: Props) {
     const pausado = status === "PAUSADO"
@@ -68,6 +70,15 @@ export default function ExecucaoCabecalho({
                     </button>
                     {menuAberto && (
                         <div className="absolute right-0 top-14 z-20 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-card dark:border-slate-800 dark:bg-slate-900">
+                            <button
+                                type="button"
+                                onClick={onEditar}
+                                disabled={finalizado}
+                                className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-200 dark:hover:bg-emerald-950/40 motion-reduce:transition-none"
+                            >
+                                <Pencil size={17} aria-hidden="true" />
+                                Editar treino
+                            </button>
                             <button
                                 type="button"
                                 onClick={onFinalizar}
