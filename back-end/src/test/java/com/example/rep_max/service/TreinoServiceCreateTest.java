@@ -10,6 +10,7 @@ import com.example.rep_max.entity.TipoPerfil;
 import com.example.rep_max.entity.Usuario;
 import com.example.rep_max.exception.RegraNegocioException;
 import com.example.rep_max.repository.RotinaTreinoRepository;
+import com.example.rep_max.repository.SerieExecutadaRepository;
 import com.example.rep_max.repository.TreinoRepository;
 import com.example.rep_max.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +46,7 @@ class TreinoServiceCreateTest {
     @Mock private TreinoRepository repository;
     @Mock private RotinaTreinoRepository rotinaRepository;
     @Mock private UsuarioRepository usuarioRepository;
+    @Mock private SerieExecutadaRepository serieExecutadaRepository;
 
     private TreinoService service;
     private Usuario aluno;
@@ -52,7 +54,8 @@ class TreinoServiceCreateTest {
 
     @BeforeEach
     void setUp() {
-        service = new TreinoService(mapper, repository, rotinaRepository, usuarioRepository);
+        service = new TreinoService(mapper, repository, rotinaRepository, usuarioRepository,
+                serieExecutadaRepository);
         aluno = new Usuario();
         aluno.setId(ALUNO_ID);
         aluno.setEmail(EMAIL);

@@ -5,6 +5,7 @@ import com.example.rep_max.entity.StatusTreino;
 import com.example.rep_max.entity.Treino;
 import com.example.rep_max.exception.RegraNegocioException;
 import com.example.rep_max.repository.RotinaTreinoRepository;
+import com.example.rep_max.repository.SerieExecutadaRepository;
 import com.example.rep_max.repository.TreinoRepository;
 import com.example.rep_max.repository.UsuarioRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,12 +36,51 @@ class TreinoServiceLifecycleTest {
     @Mock private TreinoRepository repository;
     @Mock private RotinaTreinoRepository rotinaTreinoRepository;
     @Mock private UsuarioRepository usuarioRepository;
+    @Mock private SerieExecutadaRepository serieExecutadaRepository;
 
     private TreinoService service;
 
     @BeforeEach
     void setUp() {
-        service = new TreinoService(mapper, repository, rotinaTreinoRepository, usuarioRepository);
+        service = new TreinoService(mapper, repository, rotinaTreinoRepository, usuarioRepository,
+                serieExecutadaRepository);
+    }
+
+    @Test
+    void deleteAllowsWorkoutWithoutExecutedSeriesRegardlessOfStatus() {
+        for (StatusTreino status : StatusTreino.values()) {
+            Treino treino = treino(status, LocalDateTime.now(), null);
+            givenWorkout(treino);
+            when(serieExecutadaRepository.existsByTreino_Id(ID)).thenReturn(false);
+
+            service.delete(ID, OWNER);
+
+            verify(repository).delete(treino);
+        }
+        verify(serieExecutadaRepository, times(StatusTreino.values().length))
+                .existsByTreino_Id(ID);
+    }
+
+    @Test
+    void deleteRejectsWorkoutWithExecutedSeries() {
+        Treino treino = treino(StatusTreino.FINALIZADO, LocalDateTime.now(), LocalDateTime.now());
+        givenWorkout(treino);
+        when(serieExecutadaRepository.existsByTreino_Id(ID)).thenReturn(true);
+
+        assertThrows(RegraNegocioException.class, () -> service.delete(ID, OWNER));
+
+        verify(serieExecutadaRepository).existsByTreino_Id(ID);
+        verify(repository, never()).delete(treino);
+    }
+
+    @Test
+    void deleteRejectsMissingOrOtherUsersWorkoutBeforeCheckingSeries() {
+        when(repository.findByIdAndAluno_EmailIgnoreCase(ID, OWNER)).thenReturn(Optional.empty());
+
+        assertThrows(Exception.class, () -> service.delete(ID, OWNER));
+
+        verifyNoInteractions(serieExecutadaRepository);
+        verify(repository, never()).delete(org.mockito.ArgumentMatchers.any(Treino.class));
     }
 
     @Test

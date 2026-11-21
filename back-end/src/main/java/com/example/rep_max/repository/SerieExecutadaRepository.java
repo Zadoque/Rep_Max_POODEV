@@ -22,4 +22,6 @@ public interface SerieExecutadaRepository extends JpaRepository<SerieExecutada, 
             Long treinoId,
             String email
     );
+
+    boolean existsByTreino_Id(Long treinoid);
 }

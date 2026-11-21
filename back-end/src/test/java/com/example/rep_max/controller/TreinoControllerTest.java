@@ -22,11 +22,13 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -81,6 +83,49 @@ class TreinoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(VALID_REQUEST))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void deleteEmptyWorkoutReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/treinos/10").with(user(EMAIL).roles("ALUNO")).with(csrf()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteWorkoutWithSeriesReturnsConflictInErrorResponseFormat() throws Exception {
+        doThrow(new RegraNegocioException(
+                "Não é possível excluir um treino que possui séries executadas."
+        ))
+                .when(treinoService)
+                .delete(eq(10L), eq(EMAIL));
+
+        mockMvc.perform(delete("/treinos/10")
+                        .with(user(EMAIL).roles("ALUNO"))
+                        .with(csrf()))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("REGRA_NEGOCIO"))
+                .andExpect(jsonPath("$.message")
+                        .value("Não é possível excluir um treino que possui séries executadas."))
+                .andExpect(jsonPath("$.path").value("/treinos/10"));
+    }
+
+    @Test
+    void deleteMissingOrOtherUsersWorkoutReturnsNotFound() throws Exception {
+        doThrow(new ResponseStatusException(NOT_FOUND, "Treino não encontrado"))
+                .when(treinoService)
+                .delete(eq(10L), eq(EMAIL));
+
+        mockMvc.perform(delete("/treinos/10")
+                        .with(user(EMAIL).roles("ALUNO"))
+                        .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("RECURSO_NAO_ENCONTRADO"));
+    }
+
+    @Test
+    void deleteWithoutCsrfReturnsForbidden() throws Exception {
+        mockMvc.perform(delete("/treinos/10").with(user(EMAIL).roles("ALUNO")))
+                .andExpect(status().isForbidden());
     }
 
     @Test

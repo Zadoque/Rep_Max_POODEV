@@ -10,6 +10,7 @@ import com.example.rep_max.entity.Treino;
 import com.example.rep_max.entity.Usuario;
 import com.example.rep_max.exception.RegraNegocioException;
 import com.example.rep_max.repository.RotinaTreinoRepository;
+import com.example.rep_max.repository.SerieExecutadaRepository;
 import com.example.rep_max.repository.TreinoRepository;
 import com.example.rep_max.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class TreinoService {
     private final TreinoRepository repository;
     private final RotinaTreinoRepository rotinaTreinoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final SerieExecutadaRepository serieExecutadaRepository;
 
     @Transactional
     public TreinoResponse create(String email, TreinoRequest request) {
@@ -85,16 +87,24 @@ public class TreinoService {
         return mapper.toResponse(treino);
     }
 
-    // 9. Excluir um treino
     @Transactional
     public void delete(Long treinoId, String email) {
 
         Treino treino = buscarTreinoDoAluno(treinoId, email);
 
+        boolean possuiSeries = serieExecutadaRepository.existsByTreino_Id(treinoId);
+
+        if (possuiSeries) {
+            throw new RegraNegocioException(
+                    "Não é possível excluir um treino que possui séries executadas."
+            );
+        }
+
         repository.delete(treino);
     }
-    // 5. Atualizar as observações do treino
     @Transactional
+
+
     public TreinoResponse update(
             Long treinoId,
             TreinoUpdateRequest request,
@@ -138,7 +148,6 @@ public class TreinoService {
         treino.setStatus(StatusTreino.FINALIZADO);
     }
 
-    // Método auxiliar para evitar repetir a mesma consulta
     private Treino buscarTreinoDoAluno(Long treinoId, String email) {
 
         return repository
